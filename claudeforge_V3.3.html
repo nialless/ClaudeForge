@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClaudeForge V3.3</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f5ff;--bg2:#fff;--bg3:#f0edff;--bd:#e2dcff;
+  --p:#7c3aed;--p2:#a78bfa;--p3:#ede9fe;
+  --g:#059669;--g2:#d1fae5;
+  --r:#dc2626;--r2:#fee2e2;
+  --a:#d97706;--a2:#fef3c7;
+  --t:#1e1b4b;--t2:#4c4888;--mu:#9ca3af;
+  --sh:0 4px 20px rgba(124,58,237,.12);
+  --sh2:0 2px 8px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Nunito',sans-serif;font-size:14px;background:var(--bg);color:var(--t);overflow:hidden;-webkit-font-smoothing:antialiased}
+
+/* === LAYOUT === */
+#app{display:flex;height:100vh;overflow:hidden}
+
+/* === SIDEBAR === */
+#sidebar{width:290px;min-width:290px;background:var(--bg2);border-right:2px solid var(--bd);display:flex;flex-direction:column;height:100vh;overflow-y:auto;overflow-x:hidden;transition:transform .3s ease;z-index:40}
+#sidebar::-webkit-scrollbar{width:3px}
+#sidebar::-webkit-scrollbar-thumb{background:var(--bd)}
+.s-head{padding:14px 14px 10px;border-bottom:2px solid var(--bd);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.s-logo{font-size:18px;font-weight:900;letter-spacing:-.5px;background:linear-gradient(135deg,var(--p),#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.s-ver{font-size:9px;font-weight:700;background:var(--p3);color:var(--p);border:1px solid var(--p2);border-radius:20px;padding:2px 7px}
+#menu-close{margin-left:auto;display:none;border:1.5px solid var(--bd);background:var(--bg3);border-radius:7px;padding:3px 8px;cursor:pointer;font-size:13px;color:var(--t2)}
+#menu-close:hover{border-color:var(--r);color:var(--r)}
+
+/* free tier card */
+.free-card{margin:10px 11px 5px;background:var(--p3);border:1.5px solid var(--p2);border-radius:12px;padding:10px 12px;flex-shrink:0}
+.free-card h3{font-size:11.5px;font-weight:800;color:var(--p);margin-bottom:4px}
+.free-card p{font-size:10px;font-weight:600;color:var(--t2);line-height:1.6}
+.free-card a{color:var(--p);font-weight:800}
+.free-card button{margin-top:7px;background:var(--p);color:#fff;border:none;border-radius:8px;padding:5px 12px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;cursor:pointer}
+
+/* section */
+.s-sec{padding:10px 12px;border-bottom:1.5px solid var(--bd);flex-shrink:0}
+.s-sec-h{display:flex;align-items:center;gap:7px;margin-bottom:8px}
+.s-ico{width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.ic-p{background:var(--p3)}.ic-g{background:var(--g2)}.ic-b{background:#dbeafe}
+.s-sec-title{font-size:11.5px;font-weight:800}
+.s-sec-sub{font-size:9.5px;color:var(--t2);font-weight:600}
+label.lbl{display:flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;margin-bottom:3px;margin-top:7px}
+label.lbl:first-of-type{margin-top:0}
+.hint{font-size:9.5px;color:var(--t2);font-weight:600;margin-bottom:3px;line-height:1.5}
+input.fi,select.fi{width:100%;background:var(--bg3);border:1.5px solid var(--bd);border-radius:9px;padding:7px 10px;color:var(--t);font-family:'Fira Code',monospace;font-size:11px;outline:none;transition:border-color .2s}
+select.fi{font-family:'Nunito',sans-serif;font-size:11px;font-weight:600;cursor:pointer}
+input.fi:focus{border-color:var(--p2);box-shadow:0 0 0 3px rgba(124,58,237,.08)}
+input.fi::placeholder{color:var(--mu)}
+.presets{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+.pr{font-size:9.5px;font-weight:700;font-family:'Nunito',sans-serif;padding:2px 8px;border-radius:20px;cursor:pointer;border:1.5px solid;transition:all .15s}
+.pr-p{color:var(--p);border-color:var(--p2);background:var(--p3)}.pr-p:hover{background:var(--p2);color:#fff}
+.pr-g{color:var(--g);border-color:var(--g2);background:#f0fdf4}.pr-g:hover{background:var(--g);color:#fff}
+.pr-b{color:#2563eb;border-color:#bfdbfe;background:#eff6ff}.pr-b:hover{background:#2563eb;color:#fff}
+.pr-t{color:#0891b2;border-color:#a5f3fc;background:#f0fdff}.pr-t:hover{background:#0891b2;color:#fff}
+.st-row{display:flex;align-items:center;gap:6px;margin-top:6px}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.d-off{background:var(--mu)}.d-ok{background:var(--g);box-shadow:0 0 5px rgba(5,150,105,.5)}.d-warn{background:var(--a)}.d-err{background:var(--r)}
+.st-lbl{font-size:9.5px;font-weight:600;color:var(--t2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.test-btn{font-size:9.5px;font-weight:700;font-family:'Nunito',sans-serif;padding:3px 8px;border-radius:20px;border:1.5px solid var(--bd);background:var(--bg3);color:var(--t2);cursor:pointer;transition:all .15s;flex-shrink:0}
+.test-btn:hover{border-color:var(--p2);color:var(--p)}
+.slider-row{display:flex;align-items:center;gap:6px;margin-top:6px}
+.sl-lbl{font-size:9.5px;color:var(--t2);font-weight:600;flex-shrink:0}
+input[type=range]{flex:1;-webkit-appearance:none;height:4px;background:linear-gradient(to right,var(--g) 0%,var(--g) var(--pct,50%),var(--bd) var(--pct,50%),var(--bd) 100%);border-radius:4px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--p);cursor:pointer;box-shadow:0 2px 5px rgba(124,58,237,.3)}
+.sl-val{font-size:10.5px;font-weight:700;color:var(--p);width:20px;text-align:center;flex-shrink:0}
+
+/* build strip */
+#bstrip{padding:8px 11px;border-top:1.5px solid var(--bd);display:flex;flex-wrap:wrap;gap:4px;margin-top:auto;flex-shrink:0}
+.bl{font-size:9px;font-weight:700;color:var(--mu);letter-spacing:.4px}
+.bp{font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:var(--bg3);border:1.5px solid var(--bd);color:var(--mu);transition:all .3s}
+.bp.on{background:var(--p3);border-color:var(--p2);color:var(--p)}
+
+/* === MAIN === */
+#main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+#topbar{height:52px;background:var(--bg2);border-bottom:2px solid var(--bd);padding:0 14px;display:flex;align-items:center;gap:8px;flex-shrink:0}
+#menu-open{display:none;border:1.5px solid var(--bd);background:var(--bg3);border-radius:8px;padding:5px 9px;cursor:pointer;font-size:15px;line-height:1;color:var(--t);flex-shrink:0}
+#menu-open:hover{border-color:var(--p2);color:var(--p)}
+.tb-title{font-size:13px;font-weight:900;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-badge{font-size:9.5px;font-weight:700;padding:3px 9px;border-radius:20px;border:1.5px solid;white-space:nowrap;flex-shrink:0}
+.tb-auto{background:var(--p3);color:var(--p);border-color:var(--p2)}
+.tb-power{background:#fce7f3;color:#be185d;border-color:#f9a8d4}
+.tb-fast{background:var(--g2);color:var(--g);border-color:#6ee7b7}
+.tb-btn{font-size:10.5px;font-weight:700;font-family:'Nunito',sans-serif;padding:5px 10px;border-radius:8px;border:1.5px solid var(--bd);background:var(--bg3);color:var(--t2);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s}
+.tb-btn:hover{border-color:var(--p2);color:var(--p);background:var(--p3)}
+.tb-btn.d:hover{border-color:#fca5a5;color:var(--r);background:var(--r2)}
+.tb-txt{display:inline}
+
+/* chat */
+#chat{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:13px;min-height:0}
+#chat::-webkit-scrollbar{width:4px}
+#chat::-webkit-scrollbar-thumb{background:var(--bd);border-radius:4px}
+
+/* welcome card */
+.wcard{max-width:520px;margin:auto;width:100%;background:var(--bg2);border:2px solid var(--bd);border-radius:18px;padding:22px 20px;box-shadow:var(--sh);text-align:center}
+.wcard h1{font-size:20px;font-weight:900;margin-bottom:6px}
+.wcard p{font-size:12px;color:var(--t2);font-weight:600;line-height:1.7;margin-bottom:16px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.chip{font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;background:var(--bg3);border:1.5px solid var(--bd);color:var(--t2);cursor:pointer;transition:all .15s}
+.chip:hover{background:var(--p3);border-color:var(--p2);color:var(--p)}
+
+/* messages */
+.msg{display:flex;gap:8px;align-items:flex-start;max-width:780px;width:100%}
+.msg.user{align-self:flex-end;flex-direction:row-reverse}
+.av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex-shrink:0}
+.av-u{background:linear-gradient(135deg,var(--p),#ec4899);color:#fff}
+.av-p{background:linear-gradient(135deg,var(--p),#2563eb);color:#fff}
+.av-f{background:linear-gradient(135deg,var(--g),#0891b2);color:#fff}
+.mc{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1}
+.etag{display:inline-flex;align-items:center;gap:4px;font-size:8.5px;font-weight:700;font-family:'Nunito',sans-serif;padding:2px 7px;border-radius:20px;align-self:flex-start;border:1.5px solid}
+.et-p{background:var(--p3);color:var(--p);border-color:var(--p2)}
+.et-f{background:var(--g2);color:var(--g);border-color:#6ee7b7}
+.bub{background:var(--bg2);border:1.5px solid var(--bd);border-radius:14px;padding:10px 13px;font-size:13px;font-weight:500;line-height:1.7;color:var(--t);box-shadow:var(--sh2);word-break:break-word}
+.bub.u{background:linear-gradient(135deg,var(--p),#5b21b6);color:#fff;border-color:transparent;border-radius:14px 4px 14px 14px}
+.bub p{margin-bottom:.5em}.bub p:last-child{margin-bottom:0}
+.bub code{background:rgba(124,58,237,.1);color:var(--p);border-radius:4px;padding:1px 4px;font-family:'Fira Code',monospace;font-size:11px}
+.bub pre{background:var(--bg3);border:1.5px solid var(--bd);border-radius:9px;padding:10px;margin:6px 0;overflow-x:auto}
+.bub pre code{background:none;padding:0;color:var(--t);font-size:11px}
+.bub h1,.bub h2,.bub h3{font-weight:800;margin:.6em 0 .25em}
+.bub ul,.bub ol{padding-left:17px;margin:.4em 0}
+.bub li{margin:.15em 0}
+.bub strong{font-weight:800}
+.bub a{color:var(--p)}
+.sk-chip{display:inline-flex;align-items:center;gap:3px;background:var(--p3);color:var(--p);border:1.5px solid var(--p2);border-radius:20px;padding:2px 8px;cursor:pointer;font-size:9.5px;font-weight:700;font-family:'Nunito',sans-serif;transition:all .15s}
+.sk-chip:hover{background:var(--p);color:#fff}
+.rn{align-self:center;font-size:10px;font-weight:700;padding:4px 12px;border-radius:20px;background:var(--p3);color:var(--p);border:1px solid var(--p2);display:flex;align-items:center;gap:5px;max-width:85%}
+.rn.esc{background:var(--a2);color:var(--a);border-color:#fcd34d}
+.spin{width:10px;height:10px;border-radius:50%;border:2px solid rgba(124,58,237,.3);border-top-color:var(--p);animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tyb{background:var(--bg2);border:1.5px solid var(--bd);border-radius:14px;padding:12px 15px;display:flex;gap:4px;align-items:center;box-shadow:var(--sh2)}
+.tyd{width:6px;height:6px;border-radius:50%;background:var(--p2);animation:td 1.2s infinite}
+.tyd:nth-child(2){animation-delay:.2s}.tyd:nth-child(3){animation-delay:.4s}
+@keyframes td{0%,80%,100%{transform:scale(.8);opacity:.5}40%{transform:scale(1.1);opacity:1}}
+.rln{align-self:center;font-size:10px;font-weight:700;padding:4px 12px;border-radius:20px;background:var(--a2);color:var(--a);border:1.5px solid #fcd34d}
+
+/* input */
+#ibar{border-top:2px solid var(--bd);background:var(--bg2);padding:9px 13px 11px;flex-shrink:0}
+.irow{display:flex;gap:8px;align-items:flex-end}
+#inp{flex:1;background:var(--bg3);border:1.5px solid var(--bd);border-radius:12px;padding:9px 13px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:500;color:var(--t);resize:none;outline:none;min-height:42px;max-height:130px;line-height:1.5;transition:border-color .2s;-webkit-appearance:none}
+#inp:focus{border-color:var(--p2);box-shadow:0 0 0 3px rgba(124,58,237,.08)}
+#inp::placeholder{color:var(--mu);font-weight:600}
+#send{width:42px;height:42px;border-radius:10px;flex-shrink:0;background:linear-gradient(135deg,var(--p),#5b21b6);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(124,58,237,.35);transition:all .15s;-webkit-appearance:none}
+#send:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(124,58,237,.45)}
+#send:active{transform:none}
+#send:disabled{opacity:.5;transform:none;cursor:not-allowed}
+.ihint{font-size:10px;font-weight:600;color:var(--mu);margin-top:6px;text-align:center}
+
+/* overlay */
+#s-overlay{display:none;position:fixed;inset:0;background:rgba(30,27,75,.5);z-index:39}
+#s-overlay.on{display:block}
+
+/* wizard */
+#wizard{position:fixed;inset:0;background:rgba(30,27,75,.65);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px;backdrop-filter:blur(3px)}
+#wizard.off{display:none}
+#wbox{background:var(--bg2);border:2px solid var(--bd);border-radius:20px;width:100%;max-width:490px;max-height:calc(100vh - 40px);overflow-y:auto;box-shadow:0 20px 60px rgba(124,58,237,.25);animation:popup .25s ease}
+@keyframes popup{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+#wbox .wh{padding:22px 22px 14px;border-bottom:2px solid var(--bd);text-align:center}
+.w-pips{display:flex;gap:5px;justify-content:center;margin-bottom:14px}
+.pip{width:22px;height:5px;border-radius:5px;background:var(--bd);transition:background .25s}
+.pip.done{background:var(--g)}.pip.now{background:var(--p)}
+.w-em{font-size:32px;margin-bottom:8px}
+.w-title{font-size:17px;font-weight:900;margin-bottom:4px}
+.w-sub{font-size:11.5px;color:var(--t2);font-weight:600;line-height:1.6}
+#wbox .wb{padding:18px 22px}
+#wbox .wf{padding:10px 22px 20px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.wbtn{font-size:12px;font-weight:800;font-family:'Nunito',sans-serif;padding:9px 20px;border-radius:10px;cursor:pointer;border:none;transition:all .15s}
+.wbtn.pri{background:linear-gradient(135deg,var(--p),#5b21b6);color:#fff;box-shadow:0 4px 12px rgba(124,58,237,.3)}
+.wbtn.pri:hover{box-shadow:0 6px 16px rgba(124,58,237,.45);transform:translateY(-1px)}
+.wbtn.sec{background:var(--bg3);color:var(--t2);border:1.5px solid var(--bd)}
+.wbtn.sec:hover{border-color:var(--p2);color:var(--p)}
+.wbtn.ghost{background:none;color:var(--mu);border:none;font-size:11px;padding:8px}
+.wbtn.ghost:hover{color:var(--t2)}
+.w-prov{display:flex;align-items:center;gap:10px;background:var(--bg3);border:1.5px solid var(--bd);border-radius:10px;padding:10px 12px;cursor:pointer;transition:all .15s;margin-bottom:7px}
+.w-prov:hover{border-color:var(--p2);background:var(--p3)}
+.w-prov .ck{margin-left:auto;font-size:12px;color:var(--bd);flex-shrink:0}
+.info{border-radius:10px;padding:9px 12px;font-size:11px;font-weight:600;line-height:1.7;margin-bottom:9px}
+.info-p{background:var(--p3);border:1.5px solid var(--p2);color:var(--t2)}
+.info-g{background:var(--g2);border:1.5px solid #6ee7b7;color:var(--t2)}
+.info-a{background:var(--a2);border:1.5px solid #fcd34d;color:#92400e}
+
+/* improve panel */
+#i-overlay{position:fixed;inset:0;background:rgba(30,27,75,.45);z-index:50;display:none}
+#i-overlay.on{display:block}
+#ipanel{position:fixed;right:-490px;top:0;bottom:0;width:min(460px,100vw);background:var(--bg2);border-left:2px solid var(--bd);z-index:51;display:flex;flex-direction:column;transition:right .3s cubic-bezier(.4,0,.2,1);box-shadow:-6px 0 30px rgba(124,58,237,.12)}
+#ipanel.on{right:0}
+.ip-head{padding:13px 15px;border-bottom:2px solid var(--bd);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.ip-head h2{font-size:14px;font-weight:900;flex:1}
+.ip-close{background:var(--bg3);border:1.5px solid var(--bd);border-radius:7px;padding:3px 8px;cursor:pointer}
+.ip-close:hover{border-color:var(--r);color:var(--r)}
+.ip-pbw{height:3px;background:var(--bd);flex-shrink:0}
+#ip-pb{height:100%;background:linear-gradient(90deg,var(--p),#ec4899);width:0;transition:width .3s}
+#i-chat{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:9px;min-height:0}
+.im{display:flex;gap:6px}.im.user{flex-direction:row-reverse}
+.im-av{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0}
+.im-av.ai{background:var(--p3);color:var(--p)}.im-av.u{background:linear-gradient(135deg,var(--p),#ec4899);color:#fff}
+.im-bub{background:var(--bg3);border:1.5px solid var(--bd);border-radius:10px;padding:8px 11px;font-size:11.5px;font-weight:500;line-height:1.6;max-width:85%;word-break:break-word}
+.im-bub.u{background:linear-gradient(135deg,var(--p),#5b21b6);color:#fff;border-color:transparent}
+.i-foot{padding:10px;border-top:2px solid var(--bd);display:flex;gap:6px;flex-shrink:0}
+#i-inp{flex:1;background:var(--bg3);border:1.5px solid var(--bd);border-radius:8px;padding:7px 10px;font-family:'Nunito',sans-serif;font-size:13px;outline:none;resize:none;min-height:36px;max-height:80px}
+#i-inp:focus{border-color:var(--p2)}
+#i-send{background:linear-gradient(135deg,var(--p),#5b21b6);color:#fff;border:none;border-radius:8px;padding:7px 12px;cursor:pointer;font-size:15px;flex-shrink:0}
+#i-send:disabled{opacity:.5;cursor:not-allowed}
+
+/* gen overlay */
+#gen{position:fixed;inset:0;background:rgba(30,27,75,.75);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(5px)}
+#gen.on{display:flex}
+.gen-box{background:var(--bg2);border:2px solid var(--bd);border-radius:16px;padding:26px 32px;text-align:center;box-shadow:0 20px 60px rgba(124,58,237,.3);max-width:300px;width:100%}
+.gen-spin{width:36px;height:36px;border-radius:50%;border:4px solid var(--bd);border-top-color:var(--p);animation:spin .8s linear infinite;margin:0 auto 12px}
+#gen-title{font-size:14px;font-weight:900;margin-bottom:4px}
+#gen-step{font-size:11px;color:var(--t2);font-weight:600}
+
+/* skill modal */
+#skm{position:fixed;inset:0;background:rgba(30,27,75,.6);z-index:300;display:none;align-items:center;justify-content:center;padding:16px}
+#skm.on{display:flex}
+.skm-box{background:var(--bg2);border:2px solid var(--bd);border-radius:16px;width:100%;max-width:490px;max-height:calc(100vh - 40px);overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.skm-h{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:2px solid var(--bd);flex-shrink:0}
+.skm-h h3{flex:1;font-size:13px;font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.skm-c{flex:1;overflow-y:auto}
+.skm-c pre{padding:16px;font-size:10.5px;font-family:'Fira Code',monospace;line-height:1.7;white-space:pre-wrap}
+.skm-f{padding:10px 14px;border-top:2px solid var(--bd);display:flex;gap:6px;flex-shrink:0}
+.ska{font-size:10.5px;font-weight:700;font-family:'Nunito',sans-serif;padding:6px 12px;border-radius:8px;cursor:pointer;border:1.5px solid;transition:all .15s}
+.ska-c{background:var(--p3);color:var(--p);border-color:var(--p2)}.ska-c:hover{background:var(--p);color:#fff}
+.ska-d{background:var(--g2);color:var(--g);border-color:#6ee7b7}.ska-d:hover{background:var(--g);color:#fff}
+
+/* toast */
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--t);color:#fff;padding:8px 16px;border-radius:30px;font-size:12px;font-weight:700;z-index:9999;transition:transform .25s;white-space:nowrap;max-width:calc(100vw - 28px)}
+#toast.on{transform:translateX(-50%) translateY(0)}
+#toast.ok{background:var(--g)}#toast.err{background:var(--r)}#toast.warn{background:var(--a)}
+
+/* responsive */
+@media(max-width:860px){
+  #sidebar{position:fixed;left:0;top:0;bottom:0;transform:translateX(-100%)}
+  #sidebar.open{transform:translateX(0)}
+  #menu-open{display:flex}
+  #menu-close{display:block}
+  #s-overlay.on{display:block}
+  .tb-txt{display:none}
+  .tb-btn{padding:5px 8px}
+  .tb-badge{display:none}
+}
+@media(max-width:480px){
+  #chat{padding:10px}
+  #ibar{padding:7px 9px 9px}
+  #inp{font-size:16px}
+}
+</style>
+</head>
+<body>
+
+<div id="s-overlay" onclick="closeSB()"></div>
+
+<div id="app">
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div class="s-head">
+    <span class="s-logo">ClaudeForge</span>
+    <span class="s-ver">V3.3</span>
+    <button id="menu-close" onclick="closeSB()">✕</button>
+  </div>
+
+  <div class="free-card">
+    <h3>⚡ Free API Available</h3>
+    <p><strong>Groq</strong> is completely free — fast AI with no credit card.<br>Get a key at <a href="https://console.groq.com" target="_blank">console.groq.com</a></p>
+    <button onclick="openWizard()">Setup guide →</button>
+  </div>
+
+  <!-- Power Engine -->
+  <div class="s-sec">
+    <div class="s-sec-h">
+      <div class="s-ico ic-p">🧠</div>
+      <div><div class="s-sec-title">Power Engine</div><div class="s-sec-sub">Complex tasks · architecture</div></div>
+    </div>
+    <label class="lbl">🔌 Endpoint <span style="font-size:9px;color:var(--mu);font-weight:400">— pick a preset:</span></label>
+    <input class="fi" id="p-url" placeholder="https://api.anthropic.com" autocomplete="off">
+    <div class="presets">
+      <span class="pr pr-p" onclick="preset('p','https://api.anthropic.com','claude-opus-4-5')">Claude</span>
+      <span class="pr pr-g" onclick="preset('p','https://api.groq.com/openai','llama-3.3-70b-versatile')">Groq FREE</span>
+      <span class="pr pr-b" onclick="preset('p','https://api.openai.com','gpt-4o')">OpenAI</span>
+      <span class="pr pr-t" onclick="preset('p','https://generativelanguage.googleapis.com/v1beta/openai','gemini-2.0-flash')">Gemini</span>
+    </div>
+    <label class="lbl">🔑 API Key</label>
+    <input class="fi" id="p-key" type="password" placeholder="Paste key here" autocomplete="off">
+    <label class="lbl">🤖 Model</label>
+    <input class="fi" id="p-model" placeholder="llama-3.3-70b-versatile" autocomplete="off">
+    <div class="st-row">
+      <div class="dot d-off" id="p-dot"></div>
+      <span class="st-lbl" id="p-lbl">Not tested</span>
+      <button class="test-btn" onclick="testConn('p')">Test ✓</button>
+    </div>
+  </div>
+
+  <!-- Fast Engine -->
+  <div class="s-sec">
+    <div class="s-sec-h">
+      <div class="s-ico ic-g">⚡</div>
+      <div><div class="s-sec-title">Fast Engine <span style="font-size:9px;color:var(--mu)">(optional)</span></div><div class="s-sec-sub">Simple questions · saves costs</div></div>
+    </div>
+    <div class="info info-g" style="margin-bottom:8px">💡 Optional — routes easy questions to a cheaper model. Skip to use Power for everything.</div>
+    <label class="lbl">🔌 Endpoint</label>
+    <input class="fi" id="f-url" placeholder="http://localhost:11434" autocomplete="off">
+    <div class="presets">
+      <span class="pr pr-g" onclick="preset('f','https://api.groq.com/openai','llama-3.3-70b-versatile')">Groq FREE</span>
+      <span class="pr pr-t" onclick="preset('f','https://generativelanguage.googleapis.com/v1beta/openai','gemini-2.0-flash')">Gemini Flash</span>
+      <span class="pr pr-p" onclick="preset('f','http://localhost:11434','llama3')">Ollama</span>
+    </div>
+    <label class="lbl">🔑 Key <span style="font-size:9px;color:var(--mu);font-weight:400">(blank = Ollama)</span></label>
+    <input class="fi" id="f-key" type="password" placeholder="Leave blank for Ollama" autocomplete="off">
+    <label class="lbl">🤖 Model</label>
+    <input class="fi" id="f-model" placeholder="llama-3.3-70b-versatile" autocomplete="off">
+    <div class="st-row">
+      <div class="dot d-off" id="f-dot"></div>
+      <span class="st-lbl" id="f-lbl">Not tested</span>
+      <button class="test-btn" onclick="testConn('f')">Test ✓</button>
+    </div>
+  </div>
+
+  <!-- Router -->
+  <div class="s-sec">
+    <div class="s-sec-h">
+      <div class="s-ico ic-b">🔀</div>
+      <div><div class="s-sec-title">Router</div><div class="s-sec-sub">How to split tasks</div></div>
+    </div>
+    <div class="hint">Low = fast handles most. High = power handles almost all.</div>
+    <div class="slider-row">
+      <span class="sl-lbl">⚡</span>
+      <input type="range" id="thr" min="1" max="9" value="5" oninput="updSlider(this)">
+      <span class="sl-val" id="thr-v">5</span>
+      <span class="sl-lbl">🧠</span>
+    </div>
+    <label class="lbl" style="margin-top:9px">If Fast fails:</label>
+    <select class="fi" id="fallback">
+      <option value="power">Switch to Power engine</option>
+      <option value="none">Show error message</option>
+    </select>
+  </div>
+
+  <div id="bstrip">
+    <span class="bl">DETECTED: </span>
+    <span class="bp" id="b-proj">📁 Projects</span>
+    <span class="bp" id="b-art">🧩 Artifacts</span>
+    <span class="bp" id="b-sk">🛠 Skills</span>
+    <span class="bp" id="b-code">💻 Code</span>
+    <span class="bp" id="b-think">🤔 Thinking</span>
+    <span class="bp" id="b-mem">🧬 Memory</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <div id="cors-warn" style="display:none;background:#fef3c7;border-bottom:2px solid #fcd34d;padding:8px 14px;font-size:11.5px;font-weight:700;color:#92400e;align-items:center;gap:8px;flex-shrink:0">
+    ⚠️ <strong>File opened locally (file://).</strong> API calls will be blocked by browsers. Fix: <strong>drag this file into a browser tab</strong> via a web server, or use VS Code Live Server / Python's <code style="background:rgba(0,0,0,.08);padding:1px 5px;border-radius:4px">python3 -m http.server</code> then open <strong>localhost:8000</strong>
+    <button onclick="this.parentElement.style.display='none'" style="margin-left:auto;background:none;border:1.5px solid #fcd34d;border-radius:6px;padding:2px 8px;cursor:pointer;font-weight:700;color:#92400e;font-family:'Nunito',sans-serif;font-size:10px;flex-shrink:0">Got it ✕</button>
+  </div>
+  <div id="topbar">
+    <button id="menu-open" onclick="openSB()">☰</button>
+    <div class="tb-title">🔨 ClaudeForge</div>
+    <span class="tb-badge tb-auto" id="badge">auto-route</span>
+    <button class="tb-btn" onclick="openWizard()">⚙️<span class="tb-txt"> Setup</span></button>
+    <button class="tb-btn" onclick="openImprove()">✨<span class="tb-txt"> Improve</span></button>
+    <button class="tb-btn d" onclick="clearChat()">🗑<span class="tb-txt"> Clear</span></button>
+  </div>
+  <div id="chat">
+    <div class="wcard" id="wcard">
+      <div style="font-size:40px;margin-bottom:10px">🔨</div>
+      <h1>Welcome to ClaudeForge!</h1>
+      <p>I architect AI-powered apps on Claude.<br>Click <strong>⚙️ Setup</strong> to configure your API — <strong>Groq is free</strong> and takes 2 minutes!</p>
+      <div class="chips">
+        <div class="chip" onclick="setInp('Build a customer support chatbot with memory')">💬 Support bot</div>
+        <div class="chip" onclick="setInp('Create a coding assistant that can run code')">💻 Coding AI</div>
+        <div class="chip" onclick="setInp('Design a research tool that searches the web')">🔍 Research AI</div>
+        <div class="chip" onclick="setInp('Build a personal AI with Google Calendar')">📅 Calendar AI</div>
+        <div class="chip" onclick="setInp('Build an AI that reads and summarises PDFs')">📄 Document AI</div>
+        <div class="chip" onclick="setInp('Design a multi-agent pipeline with Claude Code')">🤖 Multi-agent</div>
+      </div>
+    </div>
+  </div>
+  <div id="ibar">
+    <div class="irow">
+      <textarea id="inp" rows="1" placeholder="Describe what you want to build…" onkeydown="hKey(event)" oninput="grow(this)"></textarea>
+      <button id="send" onclick="sendMsg()">↑</button>
+    </div>
+    <div class="ihint">Enter to send · Shift+Enter for new line</div>
+  </div>
+</div>
+</div>
+
+<!-- WIZARD -->
+<div id="wizard" class="off" onclick="wizBg(event)">
+  <div id="wbox">
+    <div class="wh">
+      <div class="w-pips" id="pips"></div>
+      <div class="w-em" id="w-em">👋</div>
+      <div class="w-title" id="w-title">Welcome!</div>
+      <div class="w-sub" id="w-sub">Let's get you set up.</div>
+    </div>
+    <div class="wb" id="w-body"></div>
+    <div class="wf">
+      <button class="wbtn ghost" id="w-skip" onclick="closeWizard()">Skip for now</button>
+      <div style="display:flex;gap:7px">
+        <button class="wbtn sec" id="w-back" onclick="wizPrev()" style="display:none">← Back</button>
+        <button class="wbtn pri" id="w-next" onclick="wizNext()">Get started →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IMPROVE PANEL -->
+<div id="i-overlay" onclick="closeImprove()"></div>
+<div id="ipanel">
+  <div class="ip-pbw"><div id="ip-pb"></div></div>
+  <div class="ip-head">
+    <span style="font-size:18px">✨</span>
+    <h2>Improve ClaudeForge</h2>
+    <button class="ip-close" onclick="closeImprove()">✕ Close</button>
+  </div>
+  <div id="i-chat"></div>
+  <div class="i-foot">
+    <textarea id="i-inp" rows="1" placeholder="Describe a change or improvement…" onkeydown="hImpKey(event)" oninput="grow(this)"></textarea>
+    <button id="i-send" onclick="runImprove()">↑</button>
+  </div>
+</div>
+
+<!-- GEN OVERLAY -->
+<div id="gen">
+  <div class="gen-box">
+    <div class="gen-spin"></div>
+    <div id="gen-title">Generating…</div>
+    <div id="gen-step">Starting…</div>
+  </div>
+</div>
+
+<!-- SKILL MODAL -->
+<div id="skm" onclick="skmBg(event)">
+  <div class="skm-box">
+    <div class="skm-h"><span>🛠</span><h3 id="skm-title">Skill</h3><button class="ip-close" onclick="closeSKM()">✕</button></div>
+    <div class="skm-c"><pre id="skm-body"></pre></div>
+    <div class="skm-f">
+      <button class="ska ska-c" onclick="copySK()">📋 Copy</button>
+      <button class="ska ska-d" onclick="dlSK()">⬇️ Download SKILL.md</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* =========================================================
+   UTILS
+========================================================= */
+const $ = id => document.getElementById(id);
+const g = id => ($( id ) ? $( id ).value.trim() : '');
+function eH(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function eA(s){return s.replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
+
+/* =========================================================
+   CONFIG
+========================================================= */
+const KEYS = ['p-url','p-key','p-model','f-url','f-key','f-model'];
+function save(){KEYS.forEach(k=>localStorage.setItem('cf33_'+k,$(k).value||''))}
+function load(){KEYS.forEach(k=>{const v=localStorage.getItem('cf33_'+k);if(v&&$(k))$(k).value=v})}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+function openSB(){$('sidebar').classList.add('open');$('s-overlay').classList.add('on')}
+function closeSB(){$('sidebar').classList.remove('open');$('s-overlay').classList.remove('on')}
+window.matchMedia('(min-width:861px)').addEventListener('change',e=>{if(e.matches)closeSB()})
+
+/* =========================================================
+   PRESETS
+========================================================= */
+function preset(e,url,model){
+  $(e+'-url').value=url;$(e+'-model').value=model;
+  setDot(e,'off','Not tested');save();
+  toast((e==='p'?'🧠 Power':'⚡ Fast')+' preset → '+model)
+}
+function setDot(e,state,lbl){
+  const cls={ok:'d-ok',warn:'d-warn',err:'d-err',off:'d-off'};
+  $(e+'-dot').className='dot '+(cls[state]||'d-off');
+  $(e+'-lbl').textContent=lbl;
+}
+
+/* =========================================================
+   CONNECTION TEST
+========================================================= */
+async function testConn(e){
+  const url=g(e+'-url'),key=g(e+'-key'),model=g(e+'-model');
+  if(!url||!model){toast('Fill in URL and Model first','warn');return}
+  setDot(e,'warn','Testing…');
+  try{
+    await apiCall(url,key,model,[{role:'user',content:'Reply with just: ok'}],20);
+    setDot(e,'ok','Connected ✓');
+    toast((e==='p'?'🧠 Power':'⚡ Fast')+' connected! 🎉','ok');
+  }catch(err){
+    const isCors = err.message==='Failed to fetch' || err.message.includes('NetworkError') || err.message.includes('CORS');
+    const msg = isCors
+      ? 'CORS blocked — open via http:// not file://'
+      : err.message.slice(0,44);
+    setDot(e,'err',msg);
+    toast(isCors ? 'Open this file via a web server (not file://)' : 'Connection failed — check key & URL', 'err');
+  }
+}
+
+/* =========================================================
+   SLIDER
+========================================================= */
+function updSlider(el){
+  const pct=((el.value-el.min)/(el.max-el.min))*100;
+  el.style.setProperty('--pct',pct+'%');
+  $('thr-v').textContent=el.value;
+}
+
+/* =========================================================
+   STATE
+========================================================= */
+let msgs=[], allSk=[], cv=[3,3], vhist=[], SRC='', _rlt=null;
+
+/* =========================================================
+   ROUTING
+========================================================= */
+const RSYS='Score this message 1-10 for complexity.\n1-3: greetings, simple facts\n4-6: medium, some reasoning\n7-10: architecture, deep coding, research\nReply ONLY with JSON: {"score":N}';
+
+async function route(text){
+  const t=parseInt($('thr').value||5);
+  const fOk=!!(g('f-url')&&g('f-model'));
+  if(!fOk)return{eng:'power',why:'fast not set',score:10};
+  try{
+    const d=await apiCall(g('f-url'),g('f-key'),g('f-model'),[{role:'user',content:text}],30,RSYS);
+    const raw=d.choices?.[0]?.message?.content||'{"score":5}';
+    const score=parseInt(JSON.parse(raw.replace(/```json|```/g,'').trim()).score)||5;
+    return{eng:score>=t?'power':'fast',why:'score '+score,score};
+  }catch(e){
+    console.warn('Router error:',e.message);
+    return{eng:'power',why:'route fallback',score:5}
+  }
+}
+
+/* =========================================================
+   SEND
+========================================================= */
+function hKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg()}}
+function grow(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,140)+'px'}
+function setInp(t){const i=$('inp');i.value=t;grow(i);i.focus();closeSB()}
+
+async function sendMsg(){
+  const text=$('inp').value.trim();
+  if(!text)return;
+  $('inp').value='';$('inp').style.height='auto';
+  $('wcard')?.remove();
+  addUser(text);
+  msgs.push({role:'user',content:text});
+
+  if(!g('p-key')||!g('p-url')||!g('p-model')){
+    addAI('power','⚠️ **Not configured yet.** Click **⚙️ Setup** in the top bar to add your API key.\n\n**Free:** Get a Groq key at [console.groq.com](https://console.groq.com) — no credit card needed!');
+    return;
+  }
+
+  $('send').disabled=true;
+  const ni=addNotice('<div class="spin"></div>Choosing engine…');
+  try{
+    const r=await route(text);
+    ni.remove();setBadge(r.eng);
+    if(r.eng==='fast'&&g('f-url')&&g('f-model'))await runFast(r,text);
+    else await runPower(r,text);
+  }catch(e){
+    ni.remove();hideTyping();
+    addAI('power','⚠️ **Error:** '+e.message);
+  }finally{$('send').disabled=false}
+}
+
+function setBadge(eng){
+  const b=$('badge');
+  if(eng==='power'){b.textContent='🧠 power';b.className='tb-badge tb-power'}
+  else{b.textContent='⚡ fast';b.className='tb-badge tb-fast'}
+  setTimeout(()=>{b.textContent='auto-route';b.className='tb-badge tb-auto'},5000);
+}
+
+const FSYS='You are a helpful assistant inside ClaudeForge, an AI platform-building tool. Answer concisely.';
+
+async function runFast(r,text){
+  showTyping('fast');
+  const hist=msgs.slice(-6).filter(m=>m.role!=='system');
+  try{
+    const d=await apiCall(g('f-url'),g('f-key'),g('f-model'),[{role:'system',content:FSYS},...hist,{role:'user',content:text}],1200);
+    const reply=d.choices?.[0]?.message?.content||'(empty)';
+    hideTyping();addAI('fast',reply,r.why);
+    msgs.push({role:'assistant',content:reply,eng:'fast'});
+    parseBuild(reply);maybeEsc(text,reply);
+  }catch(e){
+    hideTyping();
+    if($('fallback').value==='power'){
+      addNotice('⚡→🧠 Fast offline — switching to Power',true);
+      await runPower({eng:'power',why:'fast offline',score:5},text);
+    }else addAI('fast','⚠️ **Fast engine error:** '+e.message);
+  }
+}
+
+async function runPower(r,text){
+  if(r.why!=='fast offline'&&r.score>1)addNotice('🧠 Routing to Power ('+r.why+')');
+  showTyping('power');
+  const hist=msgs.filter(m=>m.eng==='power'||m.role==='user').slice(-10)
+    .map(m=>({role:m.role==='user'?'user':'assistant',content:m.content}));
+  if(hist.length&&hist[hist.length-1].role==='user')hist.pop();
+  try{
+    const d=await apiCall(g('p-url'),g('p-key'),g('p-model'),[...hist,{role:'user',content:text}],4096,ARCHSYS);
+    const reply=d.choices?.[0]?.message?.content||'(empty)';
+    hideTyping();addAI('power',reply,r.why);
+    msgs.push({role:'assistant',content:reply,eng:'power'});
+    parseBuild(reply);
+  }catch(e){
+    hideTyping();const isCors=e.message==='Failed to fetch'||e.message.includes('NetworkError')||e.message.includes('CORS');
+    addAI('power', isCors
+      ? '⚠️ **CORS Error — API call blocked.**\n\nThis happens when the file is opened directly from disk (file:// URL).\n\n**Fix:** Serve the file over HTTP:\n\n```\npython3 -m http.server 8000\n```\nThen open **http://localhost:8000/claudeforge_V3.3.html** in your browser.'
+      : '⚠️ **Power engine error:** '+(e.message||'Unknown error'));
+  }
+}
+
+function maybeEsc(text,reply){
+  const lo=reply.toLowerCase();
+  if(["i don't know","i'm not sure","beyond my","cannot help","unable to"].some(s=>lo.includes(s))&&g('p-key')){
+    setTimeout(()=>{addNotice('🔼 Auto-escalating to Power',true);runPower({eng:'power',why:'auto-escalation',score:7},text)},300);
+  }
+}
+
+/* =========================================================
+   RENDERING
+========================================================= */
+function addUser(text){
+  const c=$('chat'),d=document.createElement('div');d.className='msg user';
+  d.innerHTML='<div class="av av-u">U</div><div class="mc"><div class="bub u">'+eH(text).replace(/\n/g,'<br>')+'</div></div>';
+  c.appendChild(d);sc();
+}
+function addAI(eng,md,why=''){
+  const c=$('chat'),d=document.createElement('div');d.className='msg';
+  const avC=eng==='power'?'av-p':'av-f',avL=eng==='power'?'🧠':'⚡';
+  const etC=eng==='power'?'et-p':'et-f';
+  const ml=eng==='power'?(g('p-model')||'Power LLM'):(g('f-model')||'Fast LLM');
+  d.innerHTML='<div class="av '+avC+'">'+avL+'</div><div class="mc"><div class="etag '+etC+'">'+eH(ml)+(why?' · '+eH(why):'')+'</div><div class="bub">'+md2h(md)+'</div></div>';
+  c.appendChild(d);sc();
+  d.querySelectorAll('.sk-chip').forEach(ch=>ch.addEventListener('click',()=>openSKM(ch.dataset.name,ch.dataset.content)));
+}
+function addNotice(html,esc=false){
+  const c=$('chat'),d=document.createElement('div');
+  d.className='rn'+(esc?' esc':'');d.innerHTML=html;c.appendChild(d);sc();return d;
+}
+function showTyping(eng){
+  hideTyping();
+  const c=$('chat'),d=document.createElement('div');d.className='msg';d.id='typ';
+  const avC=eng==='power'?'av-p':'av-f',avL=eng==='power'?'🧠':'⚡';
+  d.innerHTML='<div class="av '+avC+'">'+avL+'</div><div class="tyb"><div class="tyd"></div><div class="tyd"></div><div class="tyd"></div></div>';
+  c.appendChild(d);sc();
+}
+function hideTyping(){$('typ')?.remove()}
+function sc(){const c=$('chat');requestAnimationFrame(()=>c.scrollTop=c.scrollHeight)}
+
+/* =========================================================
+   MARKDOWN
+========================================================= */
+function md2h(t){
+  if(!t)return'';
+  t=t.replace(/```(\w*)\n([\s\S]*?)```/g,(_,l,c)=>'<pre><code>'+eH(c.trim())+'</code></pre>');
+  t=t.replace(/`([^`]+)`/g,(_,c)=>'<code>'+eH(c)+'</code>');
+  t=t.replace(/\*\*Skill:\s*([^*]+)\*\*/g,(_,n)=>{
+    const ct=skillTpl(n.trim());
+    return '<span class="sk-chip" data-name="'+eA(n.trim())+'" data-content="'+eA(ct)+'">🛠 '+eH(n.trim())+' ↗</span>';
+  });
+  t=t.replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank">$1</a>');
+  t=t.replace(/^### (.+)$/gm,'<h3>$1</h3>');
+  t=t.replace(/^## (.+)$/gm,'<h2>$1</h2>');
+  t=t.replace(/^# (.+)$/gm,'<h1>$1</h1>');
+  t=t.replace(/\*\*\*(.+?)\*\*\*/g,'<strong><em>$1</em></strong>');
+  t=t.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+  t=t.replace(/\*(.+?)\*/g,'<em>$1</em>');
+  t=t.replace(/^[\-\*] (.+)$/gm,'<li>$1</li>');
+  t=t.replace(/(<li>[\s\S]*?<\/li>\n?)+/g,m=>'<ul>'+m+'</ul>');
+  t=t.replace(/^\d+\. (.+)$/gm,'<li>$1</li>');
+  t=t.split(/\n\n+/).map(p=>{
+    if(/^<(h[123]|ul|ol|pre)/.test(p.trim()))return p;
+    return'<p>'+p.replace(/\n/g,'<br>')+'</p>';
+  }).join('');
+  return t;
+}
+
+/* =========================================================
+   BUILD TRACKER
+========================================================= */
+function parseBuild(text){
+  const lo=text.toLowerCase();
+  [['b-proj',['project','knowledge base']],['b-art',['artifact','mcp']],['b-sk',['skill','skill.md']],
+   ['b-code',['claude code','cli','sub-agent']],['b-think',['extended thinking']],['b-mem',['memory','self-refine']]
+  ].forEach(([id,kws])=>{const el=$(id);if(el&&kws.some(k=>lo.includes(k)))el.classList.add('on')});
+  [...text.matchAll(/\*\*Skill:\s*([^*]+)\*\*/g)].forEach(m=>{
+    const n=m[1].trim();if(!allSk.find(s=>s.name===n))allSk.push({name:n,content:skillTpl(n)});
+  });
+}
+function skillTpl(n){const s=n.toLowerCase().replace(/\s+/g,'-');return'---\nname: '+s+'\ndescription: Skill for '+n+'\n---\n\n# '+n+' Skill\n\n## Instructions\n1. Review requirements\n2. Apply systematically\n3. Validate outputs\n\n## Example\n"Using '+n+' skill, help me [task]"'}
+
+/* =========================================================
+   SKILL MODAL
+========================================================= */
+let _sk=null;
+function openSKM(name,content){_sk={name,content};$('skm-title').textContent=name;$('skm-body').textContent=content;$('skm').classList.add('on')}
+function closeSKM(){$('skm').classList.remove('on')}
+function skmBg(e){if(e.target===$('skm'))closeSKM()}
+function copySK(){if(!_sk)return;navigator.clipboard.writeText(_sk.content).then(()=>toast('Copied! ✓','ok')).catch(()=>toast('Copy failed','err'))}
+function dlSK(){if(!_sk)return;const b=new Blob([_sk.content],{type:'text/markdown'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='SKILL.md';a.click();URL.revokeObjectURL(u);toast('Downloaded!','ok')}
+
+/* =========================================================
+   CLEAR
+========================================================= */
+function clearChat(){
+  msgs=[];const c=$('chat');c.innerHTML='';
+  const w=document.createElement('div');w.className='wcard';w.id='wcard';
+  w.innerHTML='<div style="font-size:36px;margin-bottom:9px">🔨</div><h1 style="font-size:18px;font-weight:900;margin-bottom:6px">Chat cleared!</h1><p style="font-size:12px;color:var(--t2);font-weight:600;line-height:1.7;margin-bottom:14px">Ready for a new conversation.</p><div class="chips"><div class="chip" onclick="setInp(\'Build a customer support chatbot with memory\')">💬 Support bot</div><div class="chip" onclick="setInp(\'Create a coding assistant\')">💻 Coding AI</div><div class="chip" onclick="setInp(\'Design a research tool\')">🔍 Research AI</div></div>';
+  c.appendChild(w);
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+let _tt;
+function toast(msg,type=''){
+  const el=$('toast');el.textContent=msg;el.className='on'+(type?' '+type:'');
+  clearTimeout(_tt);_tt=setTimeout(()=>el.className='',2800);
+}
+
+/* =========================================================
+   RATE LIMIT
+========================================================= */
+function showRL(a,m,s){
+  hideRL();const c=$('chat'),d=document.createElement('div');d.id='rl';d.className='rln';
+  d.innerHTML='⏳ Rate limited — retry in <span id="rl-s">'+s+'</span>s · attempt '+a+'/'+m;
+  c.appendChild(d);sc();
+  let n=s;_rlt=setInterval(()=>{n--;const el=$('rl-s');if(el)el.textContent=Math.max(n,0);if(n<=0)clearInterval(_rlt)},1000);
+}
+function hideRL(){clearInterval(_rlt);$('rl')?.remove()}
+
+/* =========================================================
+   API
+========================================================= */
+function isAnthropic(url){return(url||'').toLowerCase().includes('anthropic.com')}
+
+async function apiCall(url,key,model,messages,maxTok,sys,_n){
+  _n=_n||1;const MAX=4;
+  if(isAnthropic(url))return anthropicCall(url,key,model,messages,maxTok,sys,_n,MAX);
+  /* OpenAI-compatible */
+  const msgs=sys?[{role:'system',content:sys},...messages.filter(m=>m.role!=='system')]:messages;
+  const base=url.replace(/\/$/,'');
+  const ep=base.endsWith('/chat/completions')?base:base.endsWith('/v1')?base+'/chat/completions':base+'/v1/chat/completions';
+  const h={'Content-Type':'application/json'};if(key)h['Authorization']='Bearer '+key;
+  const r=await fetch(ep,{method:'POST',headers:h,body:JSON.stringify({model,max_tokens:maxTok,messages:msgs})});
+  if(r.status===429&&_n<=MAX){
+    const w=parseInt(r.headers.get('Retry-After')||'0')*1000||Math.min(1500*Math.pow(2,_n-1),30000);
+    showRL(_n,MAX,Math.round(w/1000));await new Promise(res=>setTimeout(res,w));hideRL();
+    return apiCall(url,key,model,messages,maxTok,sys,_n+1);
+  }
+  if(!r.ok){const e=await r.json().catch(async()=>({error:{message:await r.text().catch(()=>'')}}));const msg=e?.error?.message||e?.message||('HTTP '+r.status);
+    throw new Error(msg)}
+  return r.json();
+}
+
+async function anthropicCall(url,key,model,messages,maxTok,sys,_n,MAX){
+  const system=sys||messages.find(m=>m.role==='system')?.content||'';
+  const chat=messages.filter(m=>m.role!=='system');
+  const base=url.replace(/\/$/,'').replace(/\/v1$/,'');
+  const h={'Content-Type':'application/json','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'};
+  if(key)h['x-api-key']=key;
+  const body={model,max_tokens:maxTok,messages:chat};if(system)body.system=system;
+  const r=await fetch(base+'/v1/messages',{method:'POST',headers:h,body:JSON.stringify(body)});
+  if(r.status===429&&_n<=MAX){
+    const w=parseInt(r.headers.get('Retry-After')||'0')*1000||Math.min(1500*Math.pow(2,_n-1),30000);
+    showRL(_n,MAX,Math.round(w/1000));await new Promise(res=>setTimeout(res,w));hideRL();
+    return anthropicCall(url,key,model,messages,maxTok,sys,_n+1,MAX);
+  }
+  if(!r.ok){const e=await r.json().catch(async()=>({error:{message:await r.text().catch(()=>'')}}));const msg=e?.error?.message||e?.message||('HTTP '+r.status);
+    throw new Error(msg)}
+  const data=await r.json();
+  return{choices:[{message:{role:'assistant',content:data.content?.map(b=>b.text||'').join('')||''}}]};
+}
+
+/* =========================================================
+   SYSTEM PROMPTS
+========================================================= */
+const ARCHSYS=`You are ClaudeForge, an expert AI platform architect for Anthropic's Claude ecosystem (2026).
+
+For every request, produce a complete implementation roadmap covering:
+1. Projects — persistent context, custom instructions
+2. Artifacts — live previews, MCP connectors (Drive, Gmail, Slack, GitHub)
+3. Skills — SKILL.md folders; propose 2-4 with full templates using **Skill: Name** format
+4. Claude Code CLI — sub-agents, /loop, plan files
+5. Computer Use — browser/desktop automation
+6. Extended Thinking — complex reasoning
+7. Self-Refine Loops — critic-actor chains
+8. Web Search — real-time retrieval
+9. Memory — cross-conversation memory
+
+Use **Skill: SkillName** format to create clickable skill chips. Be specific and actionable.`;
+
+const IMPSYS=`You are an expert frontend developer improving ClaudeForge.
+Given the current full HTML source and an improvement request, output the complete improved HTML file.
+Start with <!DOCTYPE html>, end with </html>. Output raw HTML only — no markdown fences, no commentary.`;
+
+/* =========================================================
+   IMPROVE PANEL
+========================================================= */
+function openImprove(){
+  SRC='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
+  $('ipanel').classList.add('on');$('i-overlay').classList.add('on');
+  setTimeout(()=>$('i-inp').focus(),300);closeSB();
+}
+function closeImprove(){$('ipanel').classList.remove('on');$('i-overlay').classList.remove('on')}
+function hImpKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();runImprove()}}
+
+function addImpMsg(role,text){
+  const c=$('i-chat'),d=document.createElement('div');d.className='im '+(role==='user'?'user':'');
+  d.innerHTML='<div class="im-av '+(role==='user'?'u':'ai')+'">'+(role==='user'?'U':'✨')+'</div><div class="im-bub '+(role==='user'?'u':'')+'">'+md2h(text)+'</div>';
+  c.appendChild(d);c.scrollTop=c.scrollHeight;
+}
+
+function nv(){let v=[...cv];v[1]++;return v}
+function vs(v){return'V'+v[0]+'.'+v[1]}
+
+async function runImprove(){
+  const desc=$('i-inp').value.trim();if(!desc)return;
+  if(!g('p-key')||!g('p-url')){
+    addImpMsg('assistant','⚠️ **Power engine not configured.** Click **⚙️ Setup** to add your API key first.');return;
+  }
+  $('i-inp').value='';$('i-inp').style.height='auto';
+  const nver=nv(),nvs=vs(nver);
+  addImpMsg('user',desc);
+  $('i-send').disabled=true;
+  $('gen-title').textContent='Generating '+nvs+'…';
+  $('gen-step').textContent='Preparing…';
+  $('gen').classList.add('on');
+  let prog=0;const pi=setInterval(()=>{prog=prog<65?prog+2.2:prog<88?prog+.35:prog<97?prog+.06:prog;$('ip-pb').style.width=prog+'%'},300);
+  const prompt='CURRENT: '+vs(cv)+'\nTARGET: '+nvs+'\nCHANGE: '+desc+'\n\nSOURCE ('+Math.round(SRC.length/1000)+'KB):\n'+SRC+'\n\nOutput complete improved HTML. Start with <!DOCTYPE html>.';
+  try{
+    $('gen-step').textContent='Sending to '+g('p-model')+'…';
+    const d=await apiCall(g('p-url'),g('p-key'),g('p-model'),[{role:'user',content:prompt}],8000,IMPSYS);
+    let src=(d.choices?.[0]?.message?.content||'').trim();
+    if(src.startsWith('```'))src=src.replace(/^```[\w]*\n?/,'').replace(/\n?```$/,'').trim();
+    const idx=src.toLowerCase().indexOf('<!doctype html');
+    if(idx===-1)throw new Error('No valid HTML returned. Try a smaller change.');
+    src=src.slice(idx);
+    $('gen-step').textContent='Opening '+nvs+'…';
+    vhist.push({ver:vs(cv),desc,ts:new Date().toISOString()});cv=nver;SRC=src;
+    clearInterval(pi);$('ip-pb').style.width='100%';
+    setTimeout(()=>$('ip-pb').style.width='0',1200);
+    $('gen').classList.remove('on');
+    const blob=new Blob([src],{type:'text/html'});const u=URL.createObjectURL(blob);
+    window.open(u,'_blank');setTimeout(()=>URL.revokeObjectURL(u),90000);
+    addImpMsg('assistant','✅ **'+nvs+' opened in a new tab!**\n\nApplied: *'+desc+'*');
+    toast(nvs+' opened!','ok');
+  }catch(e){
+    clearInterval(pi);$('ip-pb').style.width='0';$('gen').classList.remove('on');
+    addImpMsg('assistant','❌ **Failed:** '+e.message);
+    toast('Generation failed','err');
+  }finally{$('i-send').disabled=false}
+}
+
+/* =========================================================
+   WIZARD
+========================================================= */
+let wStep=0;
+
+const STEPS=[
+  {
+    em:'👋',title:'Welcome to ClaudeForge!',sub:'Set up your AI engine in a few steps.',
+    body:`
+      <div class="info info-p"><strong>🚀 What is this?</strong><br>Describe what you want to build — ClaudeForge maps out exactly how to build it on Claude's platform.</div>
+      <div class="info info-g"><strong>⚡ Free option: Groq</strong><br>Completely free API, no credit card. Fast AI with llama-3.3-70b. Get a key at <a href="https://console.groq.com" target="_blank" style="color:var(--g);font-weight:800">console.groq.com</a> — sign in, click API Keys, create a key. Done in 2 minutes.</div>
+      <div class="info info-a"><strong>💡 What you need:</strong><br>An API key from Groq (free), Anthropic, OpenAI, or Gemini. You can always change this later.</div>`
+  },
+  {
+    em:'🧠',title:'Configure Power Engine',sub:'Your main AI brain — pick a provider and paste your key.',
+    body:`
+      <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:10px">Pick a provider — URL and model fill automatically:</div>
+      <div id="w-provs"></div>
+      <div class="info info-g" style="margin-top:6px"><strong>🆓 Groq is free</strong> — <a href="https://console.groq.com" target="_blank" style="color:var(--g);font-weight:800">console.groq.com</a> → sign in → API Keys → Create key</div>
+      <label class="lbl" style="margin-top:10px">🔑 API Key</label>
+      <div class="hint">Saved in your browser only — never sent anywhere except your chosen provider.</div>
+      <input class="fi" id="w-key" type="password" placeholder="Paste your API key here…" autocomplete="off">`
+  },
+  {
+    em:'⚡',title:'Fast Engine (Optional)',sub:'A cheaper AI for simple questions. Completely skippable.',
+    body:`
+      <div class="info info-g"><strong>💡 Optional:</strong> Routes simple questions (syntax, definitions) to a cheaper model, saving your Power engine for architecture work. <strong>Skip and Power handles everything.</strong></div>
+      <div id="w-fast"></div>
+      <div id="w-fkrow" style="display:none;margin-top:8px">
+        <label class="lbl">🔑 Fast Engine Key</label>
+        <div class="hint">Only needed if different from your Power engine key.</div>
+        <input class="fi" id="w-fkey" type="password" placeholder="Leave blank to reuse Power key" autocomplete="off">
+      </div>`
+  },
+  {
+    em:'🎉',title:"You're all set!",sub:'Start by describing what you want to build.',
+    body:`
+      <div class="info info-g"><strong>✅ Setup complete!</strong><br>Your engine is configured. Click <strong>Test ✓</strong> in the sidebar to verify your connection anytime.</div>
+      <div class="info info-p"><strong>💡 Tips:</strong>
+        <ul style="margin-top:6px;padding-left:16px;line-height:2.1">
+          <li>Describe your idea — I'll build the full architecture plan</li>
+          <li>The router picks fast or power automatically per message</li>
+          <li>Click <strong>✨ Improve</strong> to evolve ClaudeForge itself!</li>
+          <li>🛠 Skill chips in replies are clickable — download templates</li>
+          <li>Come back to <strong>⚙️ Setup</strong> to change your API any time</li>
+        </ul>
+      </div>`
+  }
+];
+
+const PROVS={
+  groq:   {url:'https://api.groq.com/openai',           model:'llama-3.3-70b-versatile',  name:'Groq — FREE, no credit card',  sub:'console.groq.com',             badge:'🆓 FREE'},
+  claude: {url:'https://api.anthropic.com',              model:'claude-opus-4-5',  name:'Claude (Anthropic)',            sub:'console.anthropic.com',        badge:''},
+  openai: {url:'https://api.openai.com',                 model:'gpt-4o',           name:'GPT-4o (OpenAI)',               sub:'platform.openai.com',          badge:''},
+  gemini: {url:'https://generativelanguage.googleapis.com/v1beta/openai',model:'gemini-2.0-flash',name:'Gemini (Google)',sub:'aistudio.google.com · free tier',badge:'🆓 Free tier'},
+};
+const FAST_OPTS={
+  same:  {name:'Same as Power',          sub:'Reuses your Power key — simplest'},
+  groq:  {name:'Groq (separate key)',    sub:'If Power engine is not already Groq'},
+  skip:  {name:'Skip — Power handles everything', sub:'Simplest setup'},
+};
+let _wp='groq',_wf='skip';
+
+function wPickP(k){
+  _wp=k;
+  Object.keys(PROVS).forEach(id=>{
+    const el=$('wp-'+id);if(!el)return;
+    const sel=id===k;
+    el.style.borderColor=sel?'var(--p2)':'var(--bd)';
+    el.style.background=sel?'var(--p3)':'var(--bg3)';
+    el.querySelector('.ck').style.color=sel?'var(--p)':'var(--bd)';
+  });
+}
+function wPickF(k){
+  _wf=k;
+  Object.keys(FAST_OPTS).forEach(id=>{
+    const el=$('wf-'+id);if(!el)return;
+    const sel=id===k;
+    el.style.borderColor=sel?'var(--g)':'var(--bd)';
+    el.style.background=sel?'var(--g2)':'var(--bg3)';
+    el.querySelector('.ck').style.color=sel?'var(--g)':'var(--bd)';
+  });
+  $('w-fkrow').style.display=k==='groq'?'block':'none';
+}
+
+function openWizard(){
+  wStep=0;renderWiz();
+  $('wizard').classList.remove('off');
+  closeSB();
+}
+function closeWizard(){$('wizard').classList.add('off')}
+function wizBg(e){if(e.target===$('wizard'))closeWizard()}
+
+function wizNext(){
+  /* save step data */
+  if(wStep===1){
+    const key=$('w-key')?.value.trim();
+    const prov=PROVS[_wp];
+    if(prov){$('p-url').value=prov.url;$('p-model').value=prov.model;}
+    if(key)$('p-key').value=key;
+    save();
+  }
+  if(wStep===2){
+    if(_wf==='same'){
+      $('f-url').value=g('p-url');$('f-model').value=g('p-model');$('f-key').value=g('p-key');
+    }else if(_wf==='groq'){
+      $('f-url').value=PROVS.groq.url;$('f-model').value=PROVS.groq.model;
+      const fk=$('w-fkey')?.value.trim();if(fk)$('f-key').value=fk;
+    }
+    /* skip = do nothing */
+    save();
+  }
+  if(wStep===STEPS.length-1){closeWizard();toast("Let's build! 🚀",'ok');return}
+  wStep++;
+  renderWiz();
+}
+function wizPrev(){if(wStep>0){wStep--;renderWiz()}}
+
+function renderWiz(){
+  const s=STEPS[wStep];
+  $('w-em').textContent=s.em;
+  $('w-title').textContent=s.title;
+  $('w-sub').textContent=s.sub;
+  $('w-body').innerHTML=s.body;
+  const isLast=wStep===STEPS.length-1;
+  $('w-skip').style.display=isLast?'none':'inline-block';
+  $('w-back').style.display=wStep>0?'inline-flex':'none';
+  $('w-next').textContent=isLast?'Start building! 🚀':wStep===0?'Get started →':'Next →';
+  /* pips */
+  const pips=$('pips');pips.innerHTML='';
+  STEPS.forEach((_,i)=>{const d=document.createElement('div');d.className='pip'+(i<wStep?' done':i===wStep?' now':'');pips.appendChild(d)});
+  /* provider cards — step 1 */
+  if(wStep===1){
+    const c=$('w-provs');
+    c.innerHTML=Object.entries(PROVS).map(([k,v])=>
+      '<div class="w-prov" id="wp-'+k+'" onclick="wPickP(\''+k+'\')"><div style="flex:1"><div style="font-size:11.5px;font-weight:800">'+v.name+(v.badge?' <span style="font-size:9px;background:var(--g2);color:var(--g);border-radius:20px;padding:1px 7px;border:1px solid #6ee7b7">'+v.badge+'</span>':'')+'</div><div style="font-size:9.5px;font-weight:600;color:var(--t2)">'+v.sub+'</div></div><span class="ck">●</span></div>'
+    ).join('');
+    setTimeout(()=>wPickP(_wp),0);
+  }
+  /* fast options — step 2 */
+  if(wStep===2){
+    const c=$('w-fast');
+    c.innerHTML=Object.entries(FAST_OPTS).map(([k,v])=>
+      '<div class="w-prov" id="wf-'+k+'" onclick="wPickF(\''+k+'\')"><div style="flex:1"><div style="font-size:11.5px;font-weight:800">'+v.name+'</div><div style="font-size:9.5px;font-weight:600;color:var(--t2)">'+v.sub+'</div></div><span class="ck">●</span></div>'
+    ).join('');
+    setTimeout(()=>wPickF(_wf),0);
+  }
+}
+
+/* =========================================================
+   INIT
+========================================================= */
+window.addEventListener('DOMContentLoaded',()=>{
+  /* Warn if opened as file:// — all API calls will be CORS-blocked */
+  const proto = location.protocol;
+  if(proto === 'file:' || proto === 'content:'){
+    const w = document.getElementById('cors-warn');
+    if(w) w.style.display = 'flex';
+  }
+  /* migrate deprecated model names */
+  ['cf33_p-model','cf33_f-model'].forEach(k=>{
+    if(localStorage.getItem(k)==='llama3-70b-8192')
+      localStorage.setItem(k,'llama-3.3-70b-versatile');
+  });
+  /* restore saved config */
+  load();
+  /* auto-save on every input */
+  KEYS.forEach(k=>$(k)?.addEventListener('input',save));
+  /* init slider */
+  const sl=$('thr');if(sl)updSlider(sl);
+  /* show wizard if no key saved */
+  if(!localStorage.getItem('cf33_p-key')){
+    setTimeout(()=>openWizard(),300);
+  }
+});
+</script>
+</body>
+</html>
