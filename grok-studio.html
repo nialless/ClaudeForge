@@ -614,7 +614,14 @@
         <div class="field" style="margin-top:0">
           <input type="password" id="api-key" placeholder="xai-..." autocomplete="off">
         </div>
-        <button class="gen-btn" style="font-size:12px;padding:8px;letter-spacing:2px;margin-top:0" onclick="saveKey()">SAVE KEY</button>
+        <div style="display:flex;gap:6px">
+          <button class="gen-btn" style="font-size:12px;padding:8px;letter-spacing:2px;margin-top:0;flex:1" onclick="saveKey()">SAVE KEY</button>
+          <button class="gen-btn" style="font-size:12px;padding:8px;letter-spacing:2px;margin-top:0;flex:1;background:var(--panel2);color:var(--text);border:1px solid var(--border)" onclick="testKey()">TEST</button>
+        </div>
+        <p style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:8px;line-height:1.6">
+          Get your key at <a href="https://console.x.ai" target="_blank" style="color:var(--accent)">console.x.ai</a> → API Keys.<br>
+          ⚠ xAI API must support CORS for browser calls to work.
+        </p>
       </details>
 
       <!-- PROMPT -->
@@ -636,8 +643,8 @@
         <div class="field">
           <label>Model</label>
           <select id="img-model">
-            <option value="aurora">Aurora (Latest)</option>
-            <option value="grok-2-image">Grok-2 Image</option>
+            <option value="grok-2-image-1212">grok-2-image-1212 (Latest)</option>
+            <option value="grok-2-image">grok-2-image</option>
           </select>
         </div>
 
@@ -692,7 +699,7 @@
         <div class="field">
           <label>Model</label>
           <select id="vid-model">
-            <option value="grok-2-video">Grok-2 Video</option>
+            <option value="grok-2-aurora">grok-2-aurora</option>
           </select>
         </div>
 
@@ -839,6 +846,27 @@ window.onload = () => {
   renderGallery();
 };
 
+async function testKey() {
+  const key = document.getElementById('api-key').value.trim() || localStorage.getItem('grok_api_key');
+  if (!key) return showNotif('Enter an API key first', 'error');
+  showNotif('Testing key...', '');
+  try {
+    const res = await fetch('https://api.x.ai/v1/models', {
+      headers: { 'Authorization': `Bearer ${key}` }
+    });
+    const { ok, status, data } = await safeJson(res);
+    if (ok) {
+      const models = data.data?.map(m => m.id).join(', ') || 'OK';
+      showNotif(`✓ Key valid! Models: ${models.slice(0,60)}`, 'success');
+      document.getElementById('api-status-text').textContent = 'KEY VALID';
+    } else {
+      showNotif(`✗ ${data?.error?.message || `HTTP ${status}`}`, 'error');
+    }
+  } catch(e) {
+    showNotif(`✗ ${e.message.slice(0,80)}`, 'error');
+  }
+}
+
 function saveKey() {
   const key = document.getElementById('api-key').value.trim();
   if (!key) return showNotif('Enter an API key first', 'error');
@@ -899,6 +927,18 @@ async function generate() {
   }
 }
 
+// Safe JSON parse — falls back to raw text so we always see the real error
+async function safeJson(res) {
+  const text = await res.text();
+  try {
+    return { ok: res.ok, status: res.status, data: JSON.parse(text) };
+  } catch {
+    // API returned non-JSON (HTML error page, CORS block, etc.)
+    const snippet = text.slice(0, 300).replace(/<[^>]+>/g, '').trim();
+    throw new Error(`HTTP ${res.status} — Server returned non-JSON:\n${snippet || '(empty response)'}`);
+  }
+}
+
 async function generateImage(apiKey, prompt) {
   const model = document.getElementById('img-model').value;
   const n = parseInt(document.getElementById('num-images').value);
@@ -911,15 +951,13 @@ async function generateImage(apiKey, prompt) {
   document.getElementById('gen-progress').textContent = 'GENERATING IMAGE';
   document.getElementById('gen-sub').textContent = `Model: ${model} • ${size} • ${quality.toUpperCase()}`;
 
-  const body = {
-    model: model,
-    prompt: prompt + (negPrompt ? `. Avoid: ${negPrompt}` : '') + ` Style: ${style}.`,
-    n: n,
-    size: size,
-    quality: quality,
-    response_format: 'url',
-  };
+  const fullPrompt = [
+    prompt,
+    negPrompt ? `Avoid: ${negPrompt}.` : '',
+    style && style !== 'vivid' ? `Style: ${style}.` : ''
+  ].filter(Boolean).join(' ');
 
+  const body = { model, prompt: fullPrompt, n };
   if (seed) body.seed = parseInt(seed);
 
   const res = await fetch('https://api.x.ai/v1/images/generations', {
@@ -928,69 +966,65 @@ async function generateImage(apiKey, prompt) {
     body: JSON.stringify(body)
   });
 
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error?.message || `HTTP ${res.status}`);
+  const { ok, status, data } = await safeJson(res);
+  if (!ok) throw new Error(data?.error?.message || data?.message || `HTTP ${status}`);
 
-  const url = data.data?.[0]?.url;
-  if (!url) throw new Error('No image URL returned');
+  // Handle both b64_json and url response formats
+  const item = data.data?.[0];
+  if (!item) throw new Error('No image data in response');
+
+  let url;
+  if (item.url) {
+    url = item.url;
+  } else if (item.b64_json) {
+    url = `data:image/png;base64,${item.b64_json}`;
+  } else {
+    throw new Error('No image URL or base64 in response');
+  }
 
   showImage(url);
-  addToGallery(url, 'img', prompt.slice(0,60));
+  addToGallery(url, 'img', prompt.slice(0, 60));
   showNotif('Image generated ✓', 'success');
 }
 
 async function generateVideo(apiKey, prompt) {
   const model = document.getElementById('vid-model').value;
-  const duration = document.getElementById('vid-duration').value;
-  const motion = getChipVal('motion-chips');
-  const fps = getChipVal('fps-chips');
   const aspect = getChipVal('vid-aspect-chips');
   const camera = document.getElementById('camera-move').value;
   const negPrompt = document.getElementById('neg-prompt').value.trim();
 
   document.getElementById('gen-progress').textContent = 'GENERATING VIDEO';
-  document.getElementById('gen-sub').textContent = `This may take 30–90 seconds...`;
+  document.getElementById('gen-sub').textContent = 'This may take 30–90 seconds...';
 
   const fullPrompt = [
     prompt,
     negPrompt ? `Avoid: ${negPrompt}.` : '',
-    camera ? `Camera: ${camera.replace('_',' ')}.` : '',
-    `Motion: ${motion}. Aspect: ${aspect}.`
+    camera ? `Camera movement: ${camera.replace('_', ' ')}.` : '',
   ].filter(Boolean).join(' ');
 
-  const body = {
-    model: model,
-    prompt: fullPrompt,
-    duration: parseInt(duration),
-    fps: parseInt(fps),
-    aspect_ratio: aspect,
-    motion_intensity: motion,
-    response_format: 'url',
-  };
+  const body = { model, prompt: fullPrompt };
 
   const seed = document.getElementById('vid-seed').value.trim();
   if (seed) body.seed = parseInt(seed);
 
-  // Poll pattern for video
   const res = await fetch('https://api.x.ai/v1/video/generations', {
     method: 'POST',
     headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
   });
 
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error?.message || `HTTP ${res.status}`);
+  const { ok, status, data } = await safeJson(res);
+  if (!ok) throw new Error(data?.error?.message || data?.message || `HTTP ${status}`);
 
-  // If async job, poll
   if (data.id) {
     await pollVideoJob(apiKey, data.id, prompt);
   } else if (data.url || data.data?.[0]?.url) {
     const url = data.url || data.data[0].url;
     showVideo(url);
-    addToGallery(url, 'vid', prompt.slice(0,60));
+    addToGallery(url, 'vid', prompt.slice(0, 60));
     showNotif('Video generated ✓', 'success');
   } else {
-    throw new Error('Unexpected response format');
+    throw new Error(`Unexpected response: ${JSON.stringify(data).slice(0, 200)}`);
   }
 }
 
@@ -1008,14 +1042,14 @@ async function pollVideoJob(apiKey, jobId, prompt) {
       headers: { 'Authorization': `Bearer ${apiKey}` }
     });
 
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error?.message || `HTTP ${res.status}`);
+    const { ok, status, data } = await safeJson(res);
+    if (!ok) throw new Error(data?.error?.message || `HTTP ${status}`);
 
     if (data.status === 'completed' || data.status === 'succeeded') {
       const url = data.url || data.output_url || data.data?.[0]?.url;
       if (!url) throw new Error('Job completed but no URL returned');
       showVideo(url);
-      addToGallery(url, 'vid', prompt.slice(0,60));
+      addToGallery(url, 'vid', prompt.slice(0, 60));
       showNotif('Video generated ✓', 'success');
       return;
     }
