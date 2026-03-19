@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GROK STUDIO</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --panel: #111113;
+    --panel2: #18181c;
+    --border: #2a2a30;
+    --accent: #e8ff47;
+    --accent2: #ff4757;
+    --text: #e8e8f0;
+    --muted: #5a5a6a;
+    --success: #2ecc71;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* HEADER */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    height: 52px;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel);
+    flex-shrink: 0;
+    z-index: 10;
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-shadow: 0 0 30px rgba(232,255,71,0.3);
+  }
+
+  .logo span { color: var(--muted); }
+
+  .header-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--bg);
+    padding: 4px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  .tab-btn {
+    padding: 6px 18px;
+    border: none;
+    background: none;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .tab-btn.active {
+    background: var(--accent);
+    color: #000;
+    font-weight: 500;
+  }
+
+  .api-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 8px var(--success);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* MAIN LAYOUT */
+  .workspace {
+    display: grid;
+    grid-template-columns: 300px 1fr 280px;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* PANELS */
+  .panel {
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .panel-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .panel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  /* FORM CONTROLS */
+  .field {
+    margin-bottom: 16px;
+  }
+
+  label {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  textarea, input[type="text"], input[type="password"], select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    padding: 9px 12px;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: none;
+  }
+
+  textarea:focus, input:focus, select:focus {
+    border-color: var(--accent);
+  }
+
+  textarea { min-height: 90px; }
+
+  select option { background: var(--panel2); }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    outline: none;
+    border: none;
+    padding: 0;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(232,255,71,0.5);
+  }
+
+  .range-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .range-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    min-width: 32px;
+    text-align: right;
+  }
+
+  /* TOGGLE CHIPS */
+  .chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .chip {
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    background: none;
+  }
+
+  .chip:hover { border-color: var(--text); color: var(--text); }
+  .chip.active { border-color: var(--accent); color: var(--accent); background: rgba(232,255,71,0.07); }
+
+  /* GENERATE BUTTON */
+  .gen-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .gen-btn:hover { background: #f5ff70; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(232,255,71,0.25); }
+  .gen-btn:active { transform: translateY(0); }
+  .gen-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  /* API KEY SETUP */
+  .api-setup {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 16px;
+  }
+
+  .api-setup summary {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .api-setup[open] summary { color: var(--accent); margin-bottom: 12px; }
+
+  /* CENTER CANVAS */
+  .canvas-area {
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-right: 1px solid var(--border);
+  }
+
+  .canvas-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel);
+    flex-shrink: 0;
+  }
+
+  .canvas-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .icon-btn {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.15s;
+    font-size: 14px;
+  }
+
+  .icon-btn:hover { border-color: var(--text); color: var(--text); }
+
+  .canvas-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    padding: 24px;
+  }
+
+  .canvas-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .canvas-placeholder .big-icon {
+    font-size: 64px;
+    opacity: 0.15;
+  }
+
+  .canvas-placeholder p {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  /* OUTPUT IMAGE/VIDEO */
+  #output-container {
+    display: none;
+    max-width: 100%;
+    max-height: 100%;
+    position: relative;
+  }
+
+  #output-container img, #output-container video {
+    max-width: 100%;
+    max-height: calc(100vh - 180px);
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    display: block;
+  }
+
+  /* LOADING */
+  .generating-overlay {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .spinner {
+    width: 60px; height: 60px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .gen-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .gen-sublabel {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    opacity: 0.6;
+  }
+
+  /* RIGHT PANEL - GALLERY */
+  .gallery-panel {
+    background: var(--panel);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .gallery-item {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    background: var(--panel2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .gallery-item:hover {
+    border-color: var(--accent);
+    transform: scale(1.02);
+  }
+
+  .gallery-item img, .gallery-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .gallery-item .type-badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: rgba(0,0,0,0.7);
+    border-radius: 3px;
+    padding: 2px 5px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--accent);
+    letter-spacing: 1px;
+  }
+
+  .gallery-item .del-btn {
+    position: absolute;
+    top: 4px; left: 4px;
+    background: rgba(0,0,0,0.7);
+    border: none;
+    color: var(--accent2);
+    width: 20px; height: 20px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 10px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .gallery-item:hover .del-btn { display: flex; }
+
+  .gallery-empty {
+    padding: 32px 16px;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 2;
+    grid-column: 1/-1;
+  }
+
+  /* PRESETS PANEL */
+  .preset-item {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .preset-item:hover { border-color: var(--accent); }
+
+  .preset-name {
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 3px;
+  }
+
+  .preset-desc {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* SECTION DIVIDER */
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 16px 0;
+  }
+
+  /* NOTIFICATION */
+  .notif {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+    z-index: 100;
+    transition: transform 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .notif.show { transform: translateX(-50%) translateY(0); }
+  .notif.error { border-color: var(--accent2); color: var(--accent2); }
+  .notif.success { border-color: var(--success); color: var(--success); }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* TABS IN GALLERY */
+  .mini-tabs {
+    display: flex;
+    gap: 0;
+  }
+
+  .mini-tab {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    background: none;
+    border-bottom: 2px solid transparent;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .mini-tab.active { border-bottom-color: var(--accent); color: var(--accent); }
+
+  /* ERROR STATE */
+  .error-box {
+    background: rgba(255,71,87,0.1);
+    border: 1px solid rgba(255,71,87,0.3);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent2);
+    display: none;
+    margin-top: 8px;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">GROK<span>·</span>STUDIO</div>
+  <div class="header-tabs">
+    <button class="tab-btn active" onclick="switchMode('image')">⬛ IMAGE</button>
+    <button class="tab-btn" onclick="switchMode('video')">▶ VIDEO</button>
+  </div>
+  <div class="api-status">
+    <div class="status-dot"></div>
+    <span id="api-status-text">READY</span>
+  </div>
+</header>
+
+<div class="workspace">
+
+  <!-- LEFT: CONTROLS -->
+  <div class="panel">
+    <div class="panel-header">
+      <span>PARAMETERS</span>
+      <span id="mode-label" style="color: var(--accent)">IMAGE</span>
+    </div>
+    <div class="panel-body">
+
+      <!-- API KEY -->
+      <details class="api-setup" id="api-details">
+        <summary>⚙ xAI API Key</summary>
+        <div class="field" style="margin-top:0">
+          <input type="password" id="api-key" placeholder="xai-..." autocomplete="off">
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="gen-btn" style="font-size:12px;padding:8px;letter-spacing:2px;margin-top:0;flex:1" onclick="saveKey()">SAVE KEY</button>
+          <button class="gen-btn" style="font-size:12px;padding:8px;letter-spacing:2px;margin-top:0;flex:1;background:var(--panel2);color:var(--text);border:1px solid var(--border)" onclick="testKey()">TEST</button>
+        </div>
+        <p style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:8px;line-height:1.6">
+          Get your key at <a href="https://console.x.ai" target="_blank" style="color:var(--accent)">console.x.ai</a> → API Keys.<br>
+          ⚠ xAI API must support CORS for browser calls to work.
+        </p>
+      </details>
+
+      <!-- PROMPT -->
+      <div class="field">
+        <label>Prompt</label>
+        <textarea id="prompt" placeholder="Describe your image in detail..."></textarea>
+      </div>
+
+      <!-- NEGATIVE PROMPT -->
+      <div class="field">
+        <label>Negative Prompt</label>
+        <textarea id="neg-prompt" placeholder="What to avoid..." style="min-height:52px"></textarea>
+      </div>
+
+      <hr class="section-divider">
+
+      <!-- IMAGE PARAMS -->
+      <div id="image-params">
+        <div class="field">
+          <label>Model</label>
+          <select id="img-model">
+            <option value="grok-imagine-image">grok-imagine-image (Latest)</option>
+            <option value="grok-2-image">grok-2-image</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Aspect Ratio</label>
+          <div class="chip-group" id="aspect-chips">
+            <button class="chip active" data-val="1:1" onclick="selectChip(this,'aspect-chips')">1:1</button>
+            <button class="chip" data-val="16:9" onclick="selectChip(this,'aspect-chips')">16:9</button>
+            <button class="chip" data-val="9:16" onclick="selectChip(this,'aspect-chips')">9:16</button>
+            <button class="chip" data-val="4:3" onclick="selectChip(this,'aspect-chips')">4:3</button>
+            <button class="chip" data-val="3:4" onclick="selectChip(this,'aspect-chips')">3:4</button>
+            <button class="chip" data-val="21:9" onclick="selectChip(this,'aspect-chips')">21:9</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Number of Images</label>
+          <div class="range-row">
+            <input type="range" id="num-images" min="1" max="4" value="1" oninput="updateRange(this,'num-images-val')">
+            <span class="range-val" id="num-images-val">1</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Quality Hint <span style="color:var(--muted);font-size:9px">(added to prompt)</span></label>
+          <div class="chip-group" id="quality-chips">
+            <button class="chip" data-val="draft quality, fast sketch" onclick="selectChip(this,'quality-chips')">Draft</button>
+            <button class="chip active" data-val="" onclick="selectChip(this,'quality-chips')">Standard</button>
+            <button class="chip" data-val="ultra high definition, extremely detailed, 8K quality" onclick="selectChip(this,'quality-chips')">HD</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Style <span style="color:var(--muted);font-size:9px">(added to prompt)</span></label>
+          <div class="chip-group" id="style-chips">
+            <button class="chip active" data-val="" onclick="selectChip(this,'style-chips')">Default</button>
+            <button class="chip" data-val="natural photography style" onclick="selectChip(this,'style-chips')">Natural</button>
+            <button class="chip" data-val="cinematic film style, dramatic lighting" onclick="selectChip(this,'style-chips')">Cinematic</button>
+            <button class="chip" data-val="anime illustration style" onclick="selectChip(this,'style-chips')">Anime</button>
+            <button class="chip" data-val="pencil sketch drawing style" onclick="selectChip(this,'style-chips')">Sketch</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Seed (optional)</label>
+          <input type="text" id="img-seed" placeholder="Leave blank for random">
+        </div>
+      </div>
+
+      <!-- VIDEO PARAMS -->
+      <div id="video-params" style="display:none">
+        <div class="field">
+          <label>Model</label>
+          <select id="vid-model">
+            <option value="grok-2-aurora">grok-2-aurora</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Aspect Ratio <span style="color:var(--muted);font-size:9px">(prompt hint)</span></label>
+          <div class="chip-group" id="vid-aspect-chips">
+            <button class="chip active" data-val="16:9 widescreen" onclick="selectChip(this,'vid-aspect-chips')">16:9</button>
+            <button class="chip" data-val="9:16 vertical" onclick="selectChip(this,'vid-aspect-chips')">9:16</button>
+            <button class="chip" data-val="1:1 square" onclick="selectChip(this,'vid-aspect-chips')">1:1</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Motion Style <span style="color:var(--muted);font-size:9px">(prompt hint)</span></label>
+          <div class="chip-group" id="motion-chips">
+            <button class="chip" data-val="slow gentle motion" onclick="selectChip(this,'motion-chips')">Slow</button>
+            <button class="chip active" data-val="smooth fluid motion" onclick="selectChip(this,'motion-chips')">Medium</button>
+            <button class="chip" data-val="fast dynamic energetic motion" onclick="selectChip(this,'motion-chips')">Fast</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Camera <span style="color:var(--muted);font-size:9px">(prompt hint)</span></label>
+          <select id="camera-move">
+            <option value="">No specific movement</option>
+            <option value="slow zoom in">Zoom In</option>
+            <option value="slow zoom out">Zoom Out</option>
+            <option value="pan left">Pan Left</option>
+            <option value="pan right">Pan Right</option>
+            <option value="orbital camera movement">Orbit</option>
+            <option value="dolly shot forward">Dolly Forward</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Seed (optional)</label>
+          <input type="text" id="vid-seed" placeholder="Leave blank for random">
+        </div>
+      </div>
+
+      <div id="error-msg" class="error-box"></div>
+
+      <button class="gen-btn" id="gen-btn" onclick="generate()">
+        <span id="gen-icon">✦</span>
+        <span id="gen-text">GENERATE</span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- CENTER: CANVAS -->
+  <div class="canvas-area">
+    <div class="canvas-toolbar">
+      <span style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)" id="canvas-label">OUTPUT</span>
+      <div class="canvas-actions">
+        <button class="icon-btn" title="Download" onclick="downloadOutput()">⬇</button>
+        <button class="icon-btn" title="Copy to clipboard" onclick="copyOutput()">⎘</button>
+        <button class="icon-btn" title="Add to gallery" onclick="addCurrentToGallery()">＋</button>
+      </div>
+    </div>
+    <div class="canvas-main">
+      <div class="canvas-placeholder" id="placeholder">
+        <div class="big-icon">◻</div>
+        <p>ENTER YOUR PROMPT<br>AND HIT GENERATE</p>
+      </div>
+      <div class="generating-overlay" id="generating">
+        <div class="spinner"></div>
+        <div class="gen-label" id="gen-progress">GENERATING IMAGE</div>
+        <div class="gen-sublabel" id="gen-sub">Sending request to xAI API...</div>
+      </div>
+      <div id="output-container">
+        <img id="output-img" src="" alt="" style="display:none">
+        <video id="output-video" controls loop style="display:none"></video>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: GALLERY + PRESETS -->
+  <div class="gallery-panel">
+    <div class="panel-header" style="padding:0">
+      <button class="mini-tab active" onclick="switchGalleryTab('gallery', this)">GALLERY</button>
+      <button class="mini-tab" onclick="switchGalleryTab('presets', this)">PRESETS</button>
+    </div>
+
+    <!-- Gallery View -->
+    <div id="gallery-view" class="panel-body" style="padding:0">
+      <div class="gallery-grid" id="gallery-grid">
+        <div class="gallery-empty">No generations yet.<br>Create something!</div>
+      </div>
+    </div>
+
+    <!-- Presets View -->
+    <div id="presets-view" class="panel-body" style="display:none">
+      <div id="presets-list"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="notif" id="notif"></div>
+
+<script>
+let currentMode = 'image';
+let gallery = JSON.parse(localStorage.getItem('grok_gallery') || '[]');
+let currentOutputUrl = null;
+let currentOutputType = null;
+
+const PRESETS = [
+  { name: "Cinematic Portrait", desc: "Dramatic lighting, film grain, shallow DOF", prompt: "Cinematic portrait, dramatic side lighting, shallow depth of field, film grain, 35mm, anamorphic lens flare, professional photography" },
+  { name: "Neon Noir City", desc: "Cyberpunk urban atmosphere", prompt: "Neon noir cityscape at night, rain-slicked streets, cyberpunk atmosphere, glowing signs, volumetric light, cinematic composition" },
+  { name: "Studio Product Shot", desc: "Clean white background product", prompt: "Professional product photography, clean white seamless background, soft box lighting, sharp focus, commercial quality" },
+  { name: "Fantasy Landscape", desc: "Epic otherworldly scenery", prompt: "Epic fantasy landscape, dramatic skies, volumetric god rays, sweeping vistas, concept art style, highly detailed, matte painting" },
+  { name: "Abstract Art", desc: "Non-representational vivid forms", prompt: "Abstract digital art, flowing organic forms, vibrant color gradients, generative aesthetic, high contrast, contemporary fine art" },
+  { name: "Anime Style", desc: "Japanese animation aesthetic", prompt: "Anime style illustration, detailed line art, cel shading, vivid colors, studio quality, 4K resolution" },
+  { name: "Photorealistic Nature", desc: "Award-winning wildlife photo", prompt: "National Geographic style nature photography, golden hour lighting, photorealistic detail, professional wildlife photography, 8K" },
+  { name: "Architecture Render", desc: "Modern architectural visualization", prompt: "Architectural visualization, modern minimalist building, professional render, natural lighting, photorealistic, Unreal Engine quality" },
+];
+
+// Init
+window.onload = () => {
+  const savedKey = localStorage.getItem('grok_api_key');
+  if (savedKey) {
+    document.getElementById('api-key').value = savedKey;
+    document.getElementById('api-status-text').textContent = 'KEY LOADED';
+  }
+  renderPresets();
+  renderGallery();
+};
+
+async function testKey() {
+  const key = document.getElementById('api-key').value.trim() || localStorage.getItem('grok_api_key');
+  if (!key) return showNotif('Enter an API key first', 'error');
+  showNotif('Testing key...', '');
+  try {
+    const res = await fetch('https://api.x.ai/v1/models', {
+      headers: { 'Authorization': `Bearer ${key}` }
+    });
+    const { ok, status, data } = await safeJson(res);
+    if (ok) {
+      const models = data.data?.map(m => m.id).join(', ') || 'OK';
+      showNotif(`✓ Key valid! Models: ${models.slice(0,60)}`, 'success');
+      document.getElementById('api-status-text').textContent = 'KEY VALID';
+    } else {
+      showNotif(`✗ ${data?.error?.message || `HTTP ${status}`}`, 'error');
+    }
+  } catch(e) {
+    showNotif(`✗ ${e.message.slice(0,80)}`, 'error');
+  }
+}
+
+function saveKey() {
+  const key = document.getElementById('api-key').value.trim();
+  if (!key) return showNotif('Enter an API key first', 'error');
+  localStorage.setItem('grok_api_key', key);
+  document.getElementById('api-status-text').textContent = 'KEY SAVED';
+  document.getElementById('api-details').removeAttribute('open');
+  showNotif('API key saved ✓', 'success');
+}
+
+function switchMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', (i===0&&mode==='image')||(i===1&&mode==='video')));
+  document.getElementById('image-params').style.display = mode === 'image' ? '' : 'none';
+  document.getElementById('video-params').style.display = mode === 'video' ? '' : 'none';
+  document.getElementById('mode-label').textContent = mode.toUpperCase();
+  document.getElementById('gen-text').textContent = mode === 'image' ? 'GENERATE' : 'GENERATE VIDEO';
+}
+
+function selectChip(el, groupId) {
+  document.querySelectorAll(`#${groupId} .chip`).forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function getChipVal(groupId) {
+  const active = document.querySelector(`#${groupId} .chip.active`);
+  return active ? active.dataset.val : '';
+}
+
+function updateRange(el, valId) {
+  const suffix = el.id.includes('duration') ? 's' : '';
+  document.getElementById(valId).textContent = el.value + suffix;
+}
+
+async function generate() {
+  const apiKey = localStorage.getItem('grok_api_key') || document.getElementById('api-key').value.trim();
+  if (!apiKey) {
+    showError('Please enter your xAI API key above.');
+    document.getElementById('api-details').setAttribute('open','');
+    return;
+  }
+
+  const prompt = document.getElementById('prompt').value.trim();
+  if (!prompt) return showError('Please enter a prompt.');
+
+  hideError();
+  setGenerating(true);
+
+  try {
+    if (currentMode === 'image') {
+      await generateImage(apiKey, prompt);
+    } else {
+      await generateVideo(apiKey, prompt);
+    }
+  } catch(e) {
+    showError('Error: ' + (e.message || 'Request failed. Check your API key and try again.'));
+  } finally {
+    setGenerating(false);
+  }
+}
+
+// Safe JSON parse — falls back to raw text so we always see the real error
+async function safeJson(res) {
+  const text = await res.text();
+  try {
+    return { ok: res.ok, status: res.status, data: JSON.parse(text) };
+  } catch {
+    // API returned non-JSON (HTML error page, CORS block, etc.)
+    const snippet = text.slice(0, 300).replace(/<[^>]+>/g, '').trim();
+    throw new Error(`HTTP ${res.status} — Server returned non-JSON:\n${snippet || '(empty response)'}`);
+  }
+}
+
+async function generateImage(apiKey, prompt) {
+  const model = document.getElementById('img-model').value;
+  const n = parseInt(document.getElementById('num-images').value);
+  const aspectHint = getChipVal('aspect-chips');     // prompt hint only
+  const qualityHint = getChipVal('quality-chips');   // prompt hint only
+  const styleHint = getChipVal('style-chips');       // prompt hint only
+  const seed = document.getElementById('img-seed').value.trim();
+  const negPrompt = document.getElementById('neg-prompt').value.trim();
+
+  document.getElementById('gen-progress').textContent = 'GENERATING IMAGE';
+  document.getElementById('gen-sub').textContent = `Model: ${model} • n=${n}`;
+
+  // xAI only accepts: model, prompt, n, response_format, user
+  // quality/size/style are NOT supported — bake them into prompt instead
+  const fullPrompt = [
+    prompt,
+    styleHint ? styleHint + '.' : '',
+    qualityHint ? qualityHint + '.' : '',
+    negPrompt ? `Do not include: ${negPrompt}.` : '',
+  ].filter(Boolean).join(' ');
+
+  const body = { model, prompt: fullPrompt, n };
+  if (seed) body.seed = parseInt(seed);
+
+  const res = await fetch('https://api.x.ai/v1/images/generations', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+
+  const { ok, status, data } = await safeJson(res);
+  if (!ok) throw new Error(data?.error?.message || data?.message || `HTTP ${status}: ${JSON.stringify(data)}`);
+
+  const item = data.data?.[0];
+  if (!item) throw new Error('No image data in response: ' + JSON.stringify(data));
+
+  let url;
+  if (item.url) {
+    url = item.url;
+  } else if (item.b64_json) {
+    url = `data:image/jpeg;base64,${item.b64_json}`;
+  } else {
+    throw new Error('No image URL or base64 in response');
+  }
+
+  showImage(url);
+  addToGallery(url, 'img', prompt.slice(0, 60));
+  showNotif('Image generated ✓', 'success');
+}
+
+async function generateVideo(apiKey, prompt) {
+  const model = document.getElementById('vid-model').value;
+  const aspectHint = getChipVal('vid-aspect-chips');
+  const motionHint = getChipVal('motion-chips');
+  const camera = document.getElementById('camera-move').value;
+  const negPrompt = document.getElementById('neg-prompt').value.trim();
+
+  document.getElementById('gen-progress').textContent = 'GENERATING VIDEO';
+  document.getElementById('gen-sub').textContent = 'This may take 30–90 seconds...';
+
+  // Bake all stylistic choices into the prompt since xAI video API only accepts model + prompt
+  const fullPrompt = [
+    prompt,
+    aspectHint ? `Aspect ratio: ${aspectHint}.` : '',
+    motionHint ? `${motionHint}.` : '',
+    camera ? `Camera: ${camera}.` : '',
+    negPrompt ? `Do not include: ${negPrompt}.` : '',
+  ].filter(Boolean).join(' ');
+
+  const body = { model, prompt: fullPrompt };
+  const seed = document.getElementById('vid-seed').value.trim();
+  if (seed) body.seed = parseInt(seed);
+
+  const res = await fetch('https://api.x.ai/v1/video/generations', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+
+  const { ok, status, data } = await safeJson(res);
+  if (!ok) throw new Error(data?.error?.message || data?.message || `HTTP ${status}: ${JSON.stringify(data)}`);
+
+  if (data.id) {
+    await pollVideoJob(apiKey, data.id, prompt);
+  } else if (data.url || data.data?.[0]?.url) {
+    const url = data.url || data.data[0].url;
+    showVideo(url);
+    addToGallery(url, 'vid', prompt.slice(0, 60));
+    showNotif('Video generated ✓', 'success');
+  } else {
+    throw new Error(`Unexpected response: ${JSON.stringify(data).slice(0, 300)}`);
+  }
+}
+
+async function pollVideoJob(apiKey, jobId, prompt) {
+  let attempts = 0;
+  const maxAttempts = 60;
+
+  while (attempts < maxAttempts) {
+    await new Promise(r => setTimeout(r, 3000));
+    attempts++;
+
+    document.getElementById('gen-sub').textContent = `Processing... (${attempts * 3}s elapsed)`;
+
+    const res = await fetch(`https://api.x.ai/v1/video/generations/${jobId}`, {
+      headers: { 'Authorization': `Bearer ${apiKey}` }
+    });
+
+    const { ok, status, data } = await safeJson(res);
+    if (!ok) throw new Error(data?.error?.message || `HTTP ${status}`);
+
+    if (data.status === 'completed' || data.status === 'succeeded') {
+      const url = data.url || data.output_url || data.data?.[0]?.url;
+      if (!url) throw new Error('Job completed but no URL returned');
+      showVideo(url);
+      addToGallery(url, 'vid', prompt.slice(0, 60));
+      showNotif('Video generated ✓', 'success');
+      return;
+    }
+
+    if (data.status === 'failed') throw new Error(data.error || 'Video generation failed');
+  }
+
+  throw new Error('Video generation timed out after 3 minutes');
+}
+
+function aspectToSize(aspect) {
+  const map = { '1:1':'1024x1024','16:9':'1792x1024','9:16':'1024x1792','4:3':'1365x1024','3:4':'1024x1365','21:9':'2048x877' };
+  return map[aspect] || '1024x1024';
+}
+
+function showImage(url) {
+  currentOutputUrl = url;
+  currentOutputType = 'img';
+  document.getElementById('placeholder').style.display = 'none';
+  document.getElementById('generating').style.display = 'none';
+  document.getElementById('output-container').style.display = 'block';
+  document.getElementById('output-img').src = url;
+  document.getElementById('output-img').style.display = 'block';
+  document.getElementById('output-video').style.display = 'none';
+  document.getElementById('canvas-label').textContent = 'IMAGE OUTPUT';
+}
+
+function showVideo(url) {
+  currentOutputUrl = url;
+  currentOutputType = 'vid';
+  document.getElementById('placeholder').style.display = 'none';
+  document.getElementById('generating').style.display = 'none';
+  document.getElementById('output-container').style.display = 'block';
+  document.getElementById('output-video').src = url;
+  document.getElementById('output-video').style.display = 'block';
+  document.getElementById('output-img').style.display = 'none';
+  document.getElementById('canvas-label').textContent = 'VIDEO OUTPUT';
+}
+
+function setGenerating(val) {
+  document.getElementById('gen-btn').disabled = val;
+  document.getElementById('gen-text').textContent = val ? 'GENERATING...' : (currentMode === 'image' ? 'GENERATE' : 'GENERATE VIDEO');
+  document.getElementById('generating').style.display = val ? 'flex' : 'none';
+  if (val) {
+    document.getElementById('output-container').style.display = 'none';
+    document.getElementById('placeholder').style.display = 'none';
+  }
+}
+
+// GALLERY
+function addToGallery(url, type, label) {
+  gallery.unshift({ url, type, label, ts: Date.now() });
+  if (gallery.length > 50) gallery.pop();
+  localStorage.setItem('grok_gallery', JSON.stringify(gallery));
+  renderGallery();
+}
+
+function addCurrentToGallery() {
+  if (!currentOutputUrl) return showNotif('Nothing to save yet', 'error');
+  addToGallery(currentOutputUrl, currentOutputType, 'Saved output');
+  showNotif('Added to gallery ✓', 'success');
+}
+
+function renderGallery() {
+  const grid = document.getElementById('gallery-grid');
+  if (!gallery.length) {
+    grid.innerHTML = '<div class="gallery-empty">No generations yet.<br>Create something!</div>';
+    return;
+  }
+  grid.innerHTML = gallery.map((item, i) => `
+    <div class="gallery-item" onclick="loadGalleryItem(${i})">
+      <button class="del-btn" onclick="event.stopPropagation();deleteGalleryItem(${i})">✕</button>
+      ${item.type === 'img'
+        ? `<img src="${item.url}" alt="${item.label}" loading="lazy">`
+        : `<video src="${item.url}" muted></video>`}
+      <span class="type-badge">${item.type === 'img' ? 'IMG' : 'VID'}</span>
+    </div>
+  `).join('');
+}
+
+function loadGalleryItem(i) {
+  const item = gallery[i];
+  if (item.type === 'img') showImage(item.url);
+  else showVideo(item.url);
+}
+
+function deleteGalleryItem(i) {
+  gallery.splice(i, 1);
+  localStorage.setItem('grok_gallery', JSON.stringify(gallery));
+  renderGallery();
+}
+
+// PRESETS
+function renderPresets() {
+  document.getElementById('presets-list').innerHTML = PRESETS.map(p => `
+    <div class="preset-item" onclick="applyPreset('${p.prompt.replace(/'/g,"\\'")}')">
+      <div class="preset-name">${p.name}</div>
+      <div class="preset-desc">${p.desc}</div>
+    </div>
+  `).join('');
+}
+
+function applyPreset(prompt) {
+  document.getElementById('prompt').value = prompt;
+  switchGalleryTab('gallery', document.querySelector('.mini-tab'));
+  showNotif('Preset applied ✓', 'success');
+}
+
+// GALLERY TABS
+function switchGalleryTab(tab, el) {
+  document.querySelectorAll('.mini-tab').forEach(t => t.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.getElementById('gallery-view').style.display = tab === 'gallery' ? '' : 'none';
+  document.getElementById('presets-view').style.display = tab === 'presets' ? '' : 'none';
+}
+
+// DOWNLOAD
+function downloadOutput() {
+  if (!currentOutputUrl) return showNotif('Nothing to download', 'error');
+  const a = document.createElement('a');
+  a.href = currentOutputUrl;
+  a.download = `grok-studio-${Date.now()}.${currentOutputType === 'img' ? 'png' : 'mp4'}`;
+  a.target = '_blank';
+  a.click();
+}
+
+function copyOutput() {
+  if (!currentOutputUrl) return showNotif('Nothing to copy', 'error');
+  navigator.clipboard.writeText(currentOutputUrl).then(() => showNotif('URL copied ✓', 'success'));
+}
+
+// NOTIFICATIONS
+function showNotif(msg, type='') {
+  const el = document.getElementById('notif');
+  el.textContent = msg;
+  el.className = `notif ${type} show`;
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+function showError(msg) {
+  const el = document.getElementById('error-msg');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function hideError() {
+  document.getElementById('error-msg').style.display = 'none';
+}
+</script>
+</body>
+</html>
