@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ClaudeForge V3.3</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -362,6 +363,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
     <div class="tb-title">🔨 ClaudeForge</div>
     <span class="tb-badge tb-auto" id="badge">auto-route</span>
     <button class="tb-btn" onclick="openWizard()">⚙️<span class="tb-txt"> Setup</span></button>
+    <button class="tb-btn" id="dl-btn" onclick="downloadPack()" style="display:none;background:var(--g2);border-color:#6ee7b7;color:var(--g)">📦<span class="tb-txt"> Download Pack</span></button>
     <button class="tb-btn" onclick="openImprove()">✨<span class="tb-txt"> Improve</span></button>
     <button class="tb-btn d" onclick="clearChat()">🗑<span class="tb-txt"> Clear</span></button>
   </div>
@@ -519,7 +521,7 @@ function updSlider(el){
 /* =========================================================
    STATE
 ========================================================= */
-let msgs=[], allSk=[], cv=[3,3], vhist=[], SRC='', _rlt=null;
+let msgs=[], allSk=[], cv=[3,3], vhist=[], SRC='', _rlt=null, currentProject='My Claude Project', currentInstructions='';
 
 /* =========================================================
    ROUTING
@@ -695,11 +697,48 @@ function parseBuild(text){
   [['b-proj',['project','knowledge base']],['b-art',['artifact','mcp']],['b-sk',['skill','skill.md']],
    ['b-code',['claude code','cli','sub-agent']],['b-think',['extended thinking']],['b-mem',['memory','self-refine']]
   ].forEach(([id,kws])=>{const el=$(id);if(el&&kws.some(k=>lo.includes(k)))el.classList.add('on')});
+
+  /* extract project name */
+  const projMatch=text.match(/^#\s*PROJECT:\s*(.+)$/m);
+  if(projMatch)currentProject=projMatch[1].trim();
+
+  /* extract full skill content from SKILL_START...SKILL_END blocks */
+  const skillBlocks={};
+  const sbRe=/\*\*Skill:\s*([^*]+)\*\*[\s\S]*?SKILL_START([\s\S]*?)SKILL_END/g;
+  let sbm;
+  while((sbm=sbRe.exec(text))!==null){
+    skillBlocks[sbm[1].trim()]=sbm[2].trim();
+  }
+
+  /* also extract from code blocks right after Skill: Name */
+  const cbRe=/\*\*Skill:\s*([^*]+)\*\*[\s\S]*?```[\w]*\n([\s\S]*?)```/g;
+  let cbm;
+  while((cbm=cbRe.exec(text))!==null){
+    if(!skillBlocks[cbm[1].trim()])skillBlocks[cbm[1].trim()]=cbm[2].trim();
+  }
+
+  /* also extract INSTRUCTIONS from INSTRUCTIONS_START...INSTRUCTIONS_END */
+  const instrMatch=text.match(/INSTRUCTIONS_START([\s\S]*?)INSTRUCTIONS_END/);
+  if(instrMatch)currentInstructions=instrMatch[1].trim();
+
+  /* register skills */
   [...text.matchAll(/\*\*Skill:\s*([^*]+)\*\*/g)].forEach(m=>{
-    const n=m[1].trim();if(!allSk.find(s=>s.name===n))allSk.push({name:n,content:skillTpl(n)});
+    const n=m[1].trim();
+    if(!allSk.find(s=>s.name===n)){
+      allSk.push({name:n,content:skillTpl(n,skillBlocks[n])});
+    }
   });
+
+  /* show download button if we have skills or project name */
+  if(allSk.length>0||currentProject){
+    const btn=$("dl-btn");if(btn)btn.style.display='flex';
+  }
 }
-function skillTpl(n){const s=n.toLowerCase().replace(/\s+/g,'-');return'---\nname: '+s+'\ndescription: Skill for '+n+'\n---\n\n# '+n+' Skill\n\n## Instructions\n1. Review requirements\n2. Apply systematically\n3. Validate outputs\n\n## Example\n"Using '+n+' skill, help me [task]"'}
+function skillTpl(n,extracted){
+  if(extracted)return extracted;
+  const s=n.toLowerCase().replace(/\s+/g,'-');
+  return '---\nname: '+s+'\ndescription: Skill for '+n+' in this Claude project.\ntriggers: '+n.toLowerCase()+', use '+s+', apply '+s+'\nversion: 1.0\n---\n\n# '+n+'\n\n## Purpose\nThis skill guides Claude when working on '+n+' tasks for this project.\n\n## Process\n1. Understand the specific request\n2. Apply relevant domain knowledge\n3. Structure the output clearly\n4. Validate against project requirements\n\n## Output Format\nRespond with clear sections, specific recommendations, and actionable next steps.\n\n## Example\nUser: "Help me with '+n+'"\nClaude activates this skill and provides structured, detailed guidance.';
+}
 
 /* =========================================================
    SKILL MODAL
@@ -710,6 +749,76 @@ function closeSKM(){$('skm').classList.remove('on')}
 function skmBg(e){if(e.target===$('skm'))closeSKM()}
 function copySK(){if(!_sk)return;navigator.clipboard.writeText(_sk.content).then(()=>toast('Copied! ✓','ok')).catch(()=>toast('Copy failed','err'))}
 function dlSK(){if(!_sk)return;const b=new Blob([_sk.content],{type:'text/markdown'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='SKILL.md';a.click();URL.revokeObjectURL(u);toast('Downloaded!','ok')}
+
+/* =========================================================
+   DOWNLOAD PROJECT PACK
+========================================================= */
+async function downloadPack(){
+  if(typeof JSZip==='undefined'){toast('JSZip not loaded — check internet connection','err');return;}
+  if(allSk.length===0&&!currentProject){toast('Send a message first to generate your project pack','warn');return;}
+
+  const zip=new JSZip();
+  const projName=currentProject||'My Claude Project';
+  const folderName=projName.replace(/[^a-zA-Z0-9\s-]/g,'').trim().replace(/\s+/g,'-');
+  const folder=zip.folder(folderName);
+
+  /* 1. INSTRUCTIONS.md — Claude project custom instructions */
+  const instrContent=currentInstructions||buildDefaultInstructions(projName);
+  folder.file('INSTRUCTIONS.md',
+    '# '+projName+' — Claude Project Instructions\n\n'+
+    '> Paste the content below into your Claude Project\'s **Custom Instructions** field.\n\n'+
+    '---\n\n'+instrContent+'\n\n---\n\n'+
+    '*Generated by ClaudeForge · https://github.com/nialless/claudeforge*'
+  );
+
+  /* 2. One SKILL.md per skill in its own subfolder */
+  const skillsFolder=folder.folder('skills');
+  allSk.forEach(sk=>{
+    const slug=sk.name.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+    const skFolder=skillsFolder.folder(slug);
+    skFolder.file('SKILL.md',sk.content);
+  });
+
+  /* 3. README.md — quick start guide */
+  folder.file('README.md',
+    '# '+projName+'\n\n'+
+    '## Quick Start\n\n'+
+    '1. Go to **claude.ai** → **Projects** → **New Project**\n'+
+    '2. Name it: **'+projName+'**\n'+
+    '3. Open **Project Instructions** and paste the full contents of `INSTRUCTIONS.md`\n'+
+    '4. For each folder in `/skills/`, upload the `SKILL.md` file to your Claude Project knowledge\n'+
+    '5. Start chatting using the starter prompts in INSTRUCTIONS.md\n\n'+
+    '## Files in this Pack\n\n'+
+    '| File | Purpose |\n'+
+    '|------|---------|\n'+
+    '| `INSTRUCTIONS.md` | Paste into Claude Project custom instructions |\n'+
+    allSk.map(sk=>'| `skills/'+sk.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')+'/SKILL.md` | Upload to Project knowledge |').join('\n')+
+    '\n\n## Skills Included\n\n'+
+    allSk.map((sk,i)=>(i+1)+'. **'+sk.name+'**').join('\n')+
+    '\n\n---\n*Generated by ClaudeForge*'
+  );
+
+  /* Generate and download */
+  try{
+    const blob=await zip.generateAsync({type:'blob'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download=folderName+'.zip';a.click();
+    URL.revokeObjectURL(url);
+    toast('Downloaded '+folderName+'.zip!','ok');
+  }catch(e){
+    toast('Download failed: '+e.message,'err');
+  }
+}
+
+function buildDefaultInstructions(projName){
+  return 'You are '+projName+', an AI assistant.\n\n'+
+    'Your responsibilities:\n'+
+    '1. Help users with tasks related to this project\n'+
+    '2. Provide detailed, actionable guidance\n'+
+    '3. Use available skills and tools proactively\n\n'+
+    'Always be specific, thorough, and practical in your responses.';
+}
 
 /* =========================================================
    CLEAR
@@ -787,20 +896,127 @@ async function anthropicCall(url,key,model,messages,maxTok,sys,_n,MAX){
 /* =========================================================
    SYSTEM PROMPTS
 ========================================================= */
-const ARCHSYS=`You are ClaudeForge, an expert AI platform architect for Anthropic's Claude ecosystem (2026).
+const ARCHSYS = (()=>{
+const S = String.raw;
+return S`You are ClaudeForge, an expert Claude platform architect. When given a project idea, produce a COMPREHENSIVE, DETAILED build guide using EXACTLY this structure. Never summarise — write every section in full with real specific content.
 
-For every request, produce a complete implementation roadmap covering:
-1. Projects — persistent context, custom instructions
-2. Artifacts — live previews, MCP connectors (Drive, Gmail, Slack, GitHub)
-3. Skills — SKILL.md folders; propose 2-4 with full templates using **Skill: Name** format
-4. Claude Code CLI — sub-agents, /loop, plan files
-5. Computer Use — browser/desktop automation
-6. Extended Thinking — complex reasoning
-7. Self-Refine Loops — critic-actor chains
-8. Web Search — real-time retrieval
-9. Memory — cross-conversation memory
+---
+# PROJECT: [Derive the project name from the user request]
 
-Use **Skill: SkillName** format to create clickable skill chips. Be specific and actionable.`;
+## What We Are Building
+Write 3-4 sentences: what this project does, the problem it solves, who uses it, and the core value it delivers.
+
+## Claude Platform Stack
+List every Claude.ai feature this project uses and WHY:
+- **Projects** — [exactly what persistent context and custom instructions go here]
+- **Artifacts** — [what gets built as live artifacts, which MCP connectors: Drive/Gmail/Slack/GitHub]
+- **Claude Code CLI** — [specific /loop commands, sub-agent roles, plan file structure]
+- **Extended Thinking** — [which tasks require deep reasoning, what budget]
+- **Web Search** — [what real-time data is needed and when]
+- **Memory** — [what cross-session information is remembered and how]
+- **Computer Use** — [what browser/desktop automation runs, if applicable]
+
+## Claude Project Instructions
+The EXACT text to copy-paste into the Claude Project custom instructions field. Write this as if you are writing it FOR the project — ready to use, not a template:
+
+INSTRUCTIONS_START
+You are [Project Name], an AI [specific role and domain].
+
+Your core responsibilities:
+1. [Concrete task with exact expected behaviour — not vague]
+2. [Concrete task with exact expected behaviour]
+3. [Concrete task with exact expected behaviour]
+4. [Concrete task with exact expected behaviour]
+
+Communication style: [Specific tone — professional/friendly/technical/etc]. Always [positive behaviour]. Never [anti-pattern to avoid].
+
+When the user provides [specific input type], you will [exact response behaviour including format].
+When asked about [topic area], always [specific handling instruction].
+
+Tools to use proactively:
+- Web search: use whenever [specific condition] to get [specific data]
+- Artifacts: always create [what type] when [what trigger]
+- Skills: load and apply [list skill names] for [their specific use cases]
+
+Response format: [Exact formatting rules — headers, length, structure]
+INSTRUCTIONS_END
+
+## Required Skills
+
+Produce a COMPLETE, READY-TO-SAVE SKILL.md file for each skill. Minimum 3 skills. Each must be fully written out:
+
+**Skill: [First Skill Name]**
+SKILL_START
+---
+name: [skill-name-slug]
+description: [One sentence: what this skill does and when Claude activates it]
+triggers: [phrase1, phrase2, phrase3, phrase4]
+version: 1.0
+---
+
+# [First Skill Name]
+
+## Purpose
+[3 sentences explaining what this skill enables, why it exists, and what outcome it produces for this specific project.]
+
+## Activation Conditions
+Use this skill when:
+- [Specific trigger scenario 1]
+- [Specific trigger scenario 2]
+- [Specific trigger scenario 3]
+
+## Process
+1. **[Action step]**: [Detailed instruction of what Claude does, checks, or produces]
+2. **[Action step]**: [Detailed instruction]
+3. **[Action step]**: [Detailed instruction]
+4. **[Action step]**: [Detailed instruction]
+5. **[Action step]**: [Detailed instruction]
+
+## Output Format
+[Exact structure of output when this skill runs — headings, sections, length, tone, any templates]
+
+## Example
+User: "[Realistic example prompt that activates this skill]"
+Response approach: [First paragraph of what an ideal response looks like — 4-6 sentences of real content]
+
+## Quality Checks
+- [ ] [Specific quality criterion 1]
+- [ ] [Specific quality criterion 2]
+- [ ] [Specific quality criterion 3]
+SKILL_END
+
+[Repeat the full SKILL_START...SKILL_END block for every additional skill — write each one in full]
+
+## Build Phases
+
+### Phase 1 — Setup (Days 1-3)
+- [ ] [Concrete action with exact steps]
+- [ ] [Concrete action]
+- [ ] [Concrete action]
+
+### Phase 2 — Core Build (Week 2)
+- [ ] [Concrete build task]
+- [ ] [Concrete build task]
+- [ ] [Concrete build task]
+
+### Phase 3 — Test and Launch (Week 3)
+- [ ] [Concrete finalisation step]
+- [ ] [Concrete finalisation step]
+
+## Day-One Starter Prompts
+Copy these into your Claude project to start immediately:
+1. "[Ready-to-use prompt 1 — specific to this project]"
+2. "[Ready-to-use prompt 2]"
+3. "[Ready-to-use prompt 3]"
+4. "[Ready-to-use prompt 4]"
+5. "[Ready-to-use prompt 5]"
+
+## Model and Cost
+- **Best model**: [specific model] — [one sentence reason]
+- **Free option**: Groq llama-3.3-70b-versatile works well for [specific tasks in this project]
+- **Estimated cost**: [tokens/session estimate]
+---`;
+})()
 
 const IMPSYS=`You are an expert frontend developer improving ClaudeForge.
 Given the current full HTML source and an improvement request, output the complete improved HTML file.
