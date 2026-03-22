@@ -230,6 +230,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
 .ska-d{background:var(--g2);color:var(--g);border-color:#6ee7b7}.ska-d:hover{background:var(--g);color:#fff}
 
 /* toast */
+.dl-pack-btn{display:flex;align-items:center;gap:8px;margin-top:12px;background:linear-gradient(135deg,var(--g),#047857);color:#fff;border:none;border-radius:11px;padding:12px 20px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(5,150,105,.3);transition:all .2s;width:100%}
+.dl-pack-btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(5,150,105,.4)}
+.dl-pack-btn:active{transform:none}
+.dl-pack-btn{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;background:linear-gradient(135deg,var(--g),#047857);color:#fff;border:none;border-radius:11px;padding:13px 20px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(5,150,105,.3);transition:all .2s;width:100%}
+.dl-pack-btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(5,150,105,.4)}
+.dl-pack-btn:active{transform:none}
 #toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--t);color:#fff;padding:8px 16px;border-radius:30px;font-size:12px;font-weight:700;z-index:9999;transition:transform .25s;white-space:nowrap;max-width:calc(100vw - 28px)}
 #toast.on{transform:translateX(-50%) translateY(0)}
 #toast.ok{background:var(--g)}#toast.err{background:var(--r)}#toast.warn{background:var(--a)}
@@ -250,6 +256,92 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
   #ibar{padding:7px 9px 9px}
   #inp{font-size:16px}
 }
+
+/* ── TABS ── */
+#tab-bar{display:flex;gap:0;border-bottom:2px solid var(--bd);background:var(--bg2);flex-shrink:0}
+.tab{padding:0 18px;height:42px;display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;cursor:pointer;color:var(--mu);border-bottom:2.5px solid transparent;transition:all .15s;white-space:nowrap;user-select:none}
+.tab:hover{color:var(--t2)}
+.tab.active{color:var(--p);border-bottom-color:var(--p)}
+.tab-panel{display:none;flex:1;flex-direction:column;overflow:hidden;min-height:0}
+.tab-panel.active{display:flex}
+
+/* ── SKILLS LIBRARY ── */
+#skills-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0}
+#sk-toolbar{padding:11px 14px;border-bottom:1.5px solid var(--bd);display:flex;gap:8px;align-items:center;flex-shrink:0;flex-wrap:wrap}
+#sk-search{flex:1;min-width:140px;background:var(--bg3);border:1.5px solid var(--bd);border-radius:9px;padding:7px 11px;font-family:'Nunito',sans-serif;font-size:12px;color:var(--t);outline:none}
+#sk-search:focus{border-color:var(--p2)}
+#sk-search::placeholder{color:var(--mu)}
+.sk-upload-btn{background:var(--p3);color:var(--p);border:1.5px solid var(--p2);border-radius:9px;padding:7px 12px;font-family:'Nunito',sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .15s}
+.sk-upload-btn:hover{background:var(--p);color:#fff}
+.sk-new-btn{background:var(--g2);color:var(--g);border:1.5px solid #6ee7b7;border-radius:9px;padding:7px 12px;font-family:'Nunito',sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .15s}
+.sk-new-btn:hover{background:var(--g);color:#fff}
+#sk-filter-row{width:100%;display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 10px;flex-shrink:0}
+.sk-cat{font-size:10.5px;font-weight:700;padding:3px 10px;border-radius:20px;cursor:pointer;border:1.5px solid var(--bd);background:var(--bg3);color:var(--mu);transition:all .15s}
+.sk-cat.active{background:var(--p3);border-color:var(--p2);color:var(--p)}
+#sk-list{flex:1;overflow-y:auto;padding:10px 12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;align-content:start}
+#sk-list::-webkit-scrollbar{width:4px}
+#sk-list::-webkit-scrollbar-thumb{background:var(--bd);border-radius:4px}
+.sk-card{background:var(--bg2);border:1.5px solid var(--bd);border-radius:13px;padding:13px 14px;cursor:pointer;transition:all .2s;position:relative}
+.sk-card:hover{border-color:var(--p2);box-shadow:var(--sh)}
+.sk-card.in-pack{border-color:var(--g);background:linear-gradient(135deg,#f0fdf4,var(--bg2))}
+.sk-card.in-pack::after{content:'✓ In pack';position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;background:var(--g2);color:var(--g);border:1px solid #6ee7b7;border-radius:20px;padding:2px 7px}
+.sk-card-icon{font-size:22px;margin-bottom:7px}
+.sk-card-name{font-size:12.5px;font-weight:800;margin-bottom:3px;color:var(--t)}
+.sk-card-desc{font-size:11px;font-weight:600;color:var(--t2);line-height:1.5;margin-bottom:8px}
+.sk-card-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:9px}
+.sk-tag{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:20px;background:var(--bg3);border:1px solid var(--bd);color:var(--mu)}
+.sk-card-source{font-size:9.5px;font-weight:700;color:var(--mu)}
+.sk-card-source.built-in{color:var(--p)}
+.sk-card-source.user{color:var(--g)}
+.sk-card-actions{display:flex;gap:6px;margin-top:9px}
+.ska-add{flex:1;background:var(--p3);color:var(--p);border:1.5px solid var(--p2);border-radius:8px;padding:6px 10px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
+.ska-add:hover{background:var(--p);color:#fff}
+.ska-add.added{background:var(--g2);color:var(--g);border-color:#6ee7b7}
+.ska-view{background:var(--bg3);color:var(--t2);border:1.5px solid var(--bd);border-radius:8px;padding:6px 10px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
+.ska-view:hover{border-color:var(--p2);color:var(--p)}
+.ska-del{background:var(--r2);color:var(--r);border:1.5px solid #fca5a5;border-radius:8px;padding:6px 8px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
+.ska-del:hover{background:var(--r);color:#fff}
+#sk-empty{display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;color:var(--mu);font-size:13px;font-weight:600;text-align:center;gap:10px;flex:1}
+#sk-empty .em{font-size:36px}
+
+/* skill editor modal */
+#sk-editor{position:fixed;inset:0;background:rgba(30,27,75,.65);z-index:200;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
+#sk-editor.on{display:flex}
+#sk-ed-box{background:var(--bg2);border:2px solid var(--bd);border-radius:18px;width:100%;max-width:620px;max-height:calc(100vh - 40px);overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(124,58,237,.25);animation:popup .25s ease}
+.sk-ed-head{padding:14px 18px;border-bottom:2px solid var(--bd);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.sk-ed-head h2{font-size:14px;font-weight:900;flex:1}
+.sk-ed-body{flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:11px}
+.sk-ed-field label{display:block;font-size:11px;font-weight:700;margin-bottom:4px;color:var(--t)}
+.sk-ed-field input,.sk-ed-field textarea,.sk-ed-field select{width:100%;background:var(--bg3);border:1.5px solid var(--bd);border-radius:9px;padding:8px 11px;font-family:'Fira Code',monospace;font-size:11.5px;color:var(--t);outline:none;transition:border-color .2s;resize:vertical}
+.sk-ed-field input:focus,.sk-ed-field textarea:focus{border-color:var(--p2)}
+.sk-ed-field textarea{min-height:180px;font-family:'Fira Code',monospace;line-height:1.6}
+.sk-ed-foot{padding:12px 18px;border-top:2px solid var(--bd);display:flex;gap:8px;justify-content:flex-end;flex-shrink:0}
+
+
+/* ── URL SKILL GENERATOR ── */
+#sk-url-section{padding:10px 14px;border-bottom:1.5px solid var(--bd);background:linear-gradient(135deg,#f0fdf4,var(--bg2));flex-shrink:0}
+#sk-url-section .url-head{display:flex;align-items:center;gap:7px;margin-bottom:7px;cursor:pointer;user-select:none}
+#sk-url-section .url-head h3{font-size:11.5px;font-weight:800;color:var(--g);flex:1}
+#sk-url-section .url-head .url-toggle{font-size:10px;color:var(--mu)}
+#sk-url-body{display:none}
+#sk-url-body.open{display:block}
+.url-row{display:flex;gap:7px;align-items:center;margin-bottom:8px}
+#sk-url-inp{flex:1;background:var(--bg3);border:1.5px solid var(--bd);border-radius:9px;padding:8px 11px;font-family:'Nunito',sans-serif;font-size:12px;color:var(--t);outline:none;transition:border-color .2s}
+#sk-url-inp:focus{border-color:var(--g)}
+#sk-url-inp::placeholder{color:var(--mu)}
+.url-go-btn{background:linear-gradient(135deg,var(--g),#047857);color:#fff;border:none;border-radius:9px;padding:8px 14px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0}
+.url-go-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(5,150,105,.3)}
+.url-go-btn:disabled{opacity:.5;transform:none;cursor:not-allowed}
+.url-examples{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:4px}
+.url-ex{font-size:9.5px;font-weight:700;padding:2px 9px;border-radius:20px;background:var(--g2);border:1px solid #6ee7b7;color:var(--g);cursor:pointer;transition:all .15s}
+.url-ex:hover{background:var(--g);color:#fff}
+.url-hint{font-size:10px;font-weight:600;color:var(--t2);line-height:1.5}
+#sk-url-progress{display:none;padding:10px 0 4px}
+#sk-url-progress.show{display:block}
+.url-prog-bar-wrap{height:4px;background:var(--bd);border-radius:4px;overflow:hidden;margin-bottom:6px}
+#sk-url-prog-bar{height:100%;background:linear-gradient(90deg,var(--g),#34d399);width:0;transition:width .4s;border-radius:4px}
+#sk-url-status{font-size:10.5px;font-weight:600;color:var(--t2)}
+
 </style>
 </head>
 <body>
@@ -355,41 +447,150 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
 <!-- MAIN -->
 <div id="main">
   <div id="cors-warn" style="display:none;background:#fef3c7;border-bottom:2px solid #fcd34d;padding:8px 14px;font-size:11.5px;font-weight:700;color:#92400e;align-items:center;gap:8px;flex-shrink:0">
-    ⚠️ <strong>File opened locally (file://).</strong> API calls will be blocked by browsers. Fix: <strong>drag this file into a browser tab</strong> via a web server, or use VS Code Live Server / Python's <code style="background:rgba(0,0,0,.08);padding:1px 5px;border-radius:4px">python3 -m http.server</code> then open <strong>localhost:8000</strong>
+    ⚠️ <strong>File opened locally (file://).</strong> API calls will be blocked. Fix: run <code style="background:rgba(0,0,0,.08);padding:1px 5px;border-radius:4px">python3 -m http.server 8000</code> and open <strong>localhost:8000</strong>
     <button onclick="this.parentElement.style.display='none'" style="margin-left:auto;background:none;border:1.5px solid #fcd34d;border-radius:6px;padding:2px 8px;cursor:pointer;font-weight:700;color:#92400e;font-family:'Nunito',sans-serif;font-size:10px;flex-shrink:0">Got it ✕</button>
   </div>
+
+  <!-- TOP BAR -->
   <div id="topbar">
     <button id="menu-open" onclick="openSB()">☰</button>
     <div class="tb-title">🔨 ClaudeForge</div>
     <span class="tb-badge tb-auto" id="badge">auto-route</span>
     <button class="tb-btn" onclick="openWizard()">⚙️<span class="tb-txt"> Setup</span></button>
-    <button class="tb-btn" id="dl-btn" onclick="downloadPack()" style="display:none;background:var(--g2);border-color:#6ee7b7;color:var(--g)">📦<span class="tb-txt"> Download Pack</span></button>
     <button class="tb-btn" onclick="openImprove()">✨<span class="tb-txt"> Improve</span></button>
     <button class="tb-btn d" onclick="clearChat()">🗑<span class="tb-txt"> Clear</span></button>
   </div>
-  <div id="chat">
-    <div class="wcard" id="wcard">
-      <div style="font-size:40px;margin-bottom:10px">🔨</div>
-      <h1>Welcome to ClaudeForge!</h1>
-      <p>I architect AI-powered apps on Claude.<br>Click <strong>⚙️ Setup</strong> to configure your API — <strong>Groq is free</strong> and takes 2 minutes!</p>
-      <div class="chips">
-        <div class="chip" onclick="setInp('Build a customer support chatbot with memory')">💬 Support bot</div>
-        <div class="chip" onclick="setInp('Create a coding assistant that can run code')">💻 Coding AI</div>
-        <div class="chip" onclick="setInp('Design a research tool that searches the web')">🔍 Research AI</div>
-        <div class="chip" onclick="setInp('Build a personal AI with Google Calendar')">📅 Calendar AI</div>
-        <div class="chip" onclick="setInp('Build an AI that reads and summarises PDFs')">📄 Document AI</div>
-        <div class="chip" onclick="setInp('Design a multi-agent pipeline with Claude Code')">🤖 Multi-agent</div>
+
+  <!-- TAB BAR -->
+  <div id="tab-bar">
+    <div class="tab active" id="tab-chat" onclick="switchTab('chat')">💬 Architect</div>
+    <div class="tab" id="tab-skills" onclick="switchTab('skills')">🛠 Skills Library <span id="sk-count-badge" style="font-size:9.5px;background:var(--p3);color:var(--p);border-radius:20px;padding:1px 7px;margin-left:4px;display:none"></span></div>
+  </div>
+
+  <!-- CHAT PANEL -->
+  <div class="tab-panel active" id="panel-chat">
+    <div id="chat">
+      <div class="wcard" id="wcard">
+        <div style="font-size:40px;margin-bottom:10px">🔨</div>
+        <h1>Welcome to ClaudeForge!</h1>
+        <p>I architect AI-powered apps on Claude.<br>Click <strong>⚙️ Setup</strong> to configure your API — <strong>Groq is free</strong> and takes 2 minutes!</p>
+        <div class="chips">
+          <div class="chip" onclick="setInp('Build a customer support chatbot with memory')">💬 Support bot</div>
+          <div class="chip" onclick="setInp('Create a coding assistant that can run code')">💻 Coding AI</div>
+          <div class="chip" onclick="setInp('Design a research tool that searches the web')">🔍 Research AI</div>
+          <div class="chip" onclick="setInp('Build a personal AI with Google Calendar')">📅 Calendar AI</div>
+          <div class="chip" onclick="setInp('Build an AI that reads and summarises PDFs')">📄 Document AI</div>
+          <div class="chip" onclick="setInp('Design a multi-agent pipeline with Claude Code')">🤖 Multi-agent</div>
+        </div>
+      </div>
+    </div>
+    <div id="ibar">
+      <div class="irow">
+        <textarea id="inp" rows="1" placeholder="Describe what you want to build…" onkeydown="hKey(event)" oninput="grow(this)"></textarea>
+        <button id="send" onclick="sendMsg()">↑</button>
+      </div>
+      <div class="ihint">Enter to send · Shift+Enter for new line</div>
+    </div>
+  </div>
+
+  <!-- SKILLS LIBRARY PANEL -->
+  <div class="tab-panel" id="panel-skills">
+    <div id="skills-panel">
+      <div id="sk-toolbar">
+        <input id="sk-search" type="text" placeholder="🔍  Search skills…" oninput="renderSkLib()">
+        <button class="sk-upload-btn" onclick="triggerUpload()">⬆️ Upload SKILL.md</button>
+        <button class="sk-new-btn" onclick="openSkEditor(null)">＋ New Skill</button>
+        <input type="file" id="sk-file-input" accept=".md,.txt" multiple style="display:none" onchange="handleUpload(event)">
+      </div>
+
+      <!-- URL Skill Generator -->
+      <div id="sk-url-section">
+        <div class="url-head" onclick="toggleUrlSection()">
+          <span style="font-size:14px">🌐</span>
+          <h3>Generate Skill from URL or GitHub Repo</h3>
+          <span class="url-toggle" id="url-toggle-icon">▼ expand</span>
+        </div>
+        <div id="sk-url-body">
+          <div class="url-examples">
+            <span class="url-ex" onclick="setUrlExample('https://docs.djangoproject.com/en/5.0/')">Django docs</span>
+            <span class="url-ex" onclick="setUrlExample('https://react.dev/learn')">React docs</span>
+            <span class="url-ex" onclick="setUrlExample('https://fastapi.tiangolo.com/')">FastAPI docs</span>
+            <span class="url-ex" onclick="setUrlExample('facebook/react')">GitHub: facebook/react</span>
+            <span class="url-ex" onclick="setUrlExample('vercel/next.js')">GitHub: vercel/next.js</span>
+          </div>
+          <div class="url-row">
+            <input id="sk-url-inp" type="text" placeholder="https://docs.example.com  or  owner/repo  or  paste any URL…" onkeydown="if(event.key==='Enter')genFromUrl()">
+            <button class="url-go-btn" id="url-go-btn" onclick="genFromUrl()">⚡ Generate Skill</button>
+          </div>
+          <div id="sk-url-progress">
+            <div class="url-prog-bar-wrap"><div id="sk-url-prog-bar"></div></div>
+            <div id="sk-url-status">Fetching content…</div>
+          </div>
+          <div class="url-hint">Paste a docs URL or GitHub <code style="background:rgba(0,0,0,.06);padding:1px 5px;border-radius:4px">owner/repo</code> — your AI reads it and writes a complete SKILL.md. Requires Power Engine to be configured.</div>
+        </div>
+      </div>
+
+      <div id="sk-filter-row">
+        <span class="sk-cat active" data-cat="all" onclick="setCat('all')">All</span>
+        <span class="sk-cat" data-cat="built-in" onclick="setCat('built-in')">📦 Built-in</span>
+        <span class="sk-cat" data-cat="user" onclick="setCat('user')">👤 My Skills</span>
+        <span class="sk-cat" data-cat="in-pack" onclick="setCat('in-pack')">✓ In Pack</span>
+      </div>
+      <div id="sk-list"></div>
+      <div id="sk-empty">
+        <div class="em">🛠</div>
+        <div>No skills match your search.</div>
+        <button class="sk-new-btn" onclick="openSkEditor(null)">＋ Create a skill</button>
       </div>
     </div>
   </div>
-  <div id="ibar">
-    <div class="irow">
-      <textarea id="inp" rows="1" placeholder="Describe what you want to build…" onkeydown="hKey(event)" oninput="grow(this)"></textarea>
-      <button id="send" onclick="sendMsg()">↑</button>
+
+</div><!-- /main -->
+</div><!-- /app -->
+
+<!-- SKILL EDITOR MODAL -->
+<div id="sk-editor" onclick="skEdBg(event)">
+  <div id="sk-ed-box">
+    <div class="sk-ed-head">
+      <span style="font-size:18px">🛠</span>
+      <h2 id="sk-ed-title">New Skill</h2>
+      <button class="ip-close" onclick="closeSkEditor()">✕</button>
     </div>
-    <div class="ihint">Enter to send · Shift+Enter for new line</div>
+    <div class="sk-ed-body">
+      <div class="sk-ed-field">
+        <label>Skill Name *</label>
+        <input id="sed-name" type="text" placeholder="e.g. Research Assistant">
+      </div>
+      <div class="sk-ed-field">
+        <label>Description *</label>
+        <input id="sed-desc" type="text" placeholder="One sentence: what this skill does">
+      </div>
+      <div class="sk-ed-field">
+        <label>Category</label>
+        <select id="sed-cat" class="fi" style="font-family:'Nunito',sans-serif">
+          <option value="Productivity">Productivity</option>
+          <option value="Research">Research</option>
+          <option value="Writing">Writing</option>
+          <option value="Coding">Coding</option>
+          <option value="Analysis">Analysis</option>
+          <option value="Communication">Communication</option>
+          <option value="Custom">Custom</option>
+        </select>
+      </div>
+      <div class="sk-ed-field">
+        <label>Trigger phrases (comma separated)</label>
+        <input id="sed-triggers" type="text" placeholder="research, find information, look up">
+      </div>
+      <div class="sk-ed-field">
+        <label>Full SKILL.md content *</label>
+        <textarea id="sed-content" placeholder="Paste or write the full SKILL.md content here…"></textarea>
+      </div>
+    </div>
+    <div class="sk-ed-foot">
+      <button class="wbtn sec" onclick="closeSkEditor()">Cancel</button>
+      <button class="wbtn pri" onclick="saveSkEditor()">Save Skill</button>
+    </div>
   </div>
-</div>
 </div>
 
 <!-- WIZARD -->
@@ -493,19 +694,27 @@ function setDot(e,state,lbl){
 ========================================================= */
 async function testConn(e){
   const url=g(e+'-url'),key=g(e+'-key'),model=g(e+'-model');
-  if(!url||!model){toast('Fill in URL and Model first','warn');return}
-  setDot(e,'warn','Testing…');
+  if(!url){toast('Enter an API endpoint URL first','warn');return}
+  if(!model){toast('Enter a model name first','warn');return}
+  if(!key){toast('Enter an API key first','warn');return}
+  setDot(e,'warn','Connecting…');
   try{
-    await apiCall(url,key,model,[{role:'user',content:'Reply with just: ok'}],20);
+    await apiCall(url,key,model,[{role:'user',content:'Say: ok'}],50);
     setDot(e,'ok','Connected ✓');
-    toast((e==='p'?'🧠 Power':'⚡ Fast')+' connected! 🎉','ok');
+    toast((e==='p'?'🧠 Power':'⚡ Fast')+' engine connected! 🎉','ok');
   }catch(err){
-    const isCors = err.message==='Failed to fetch' || err.message.includes('NetworkError') || err.message.includes('CORS');
-    const msg = isCors
-      ? 'CORS blocked — open via http:// not file://'
-      : err.message.slice(0,44);
-    setDot(e,'err',msg);
-    toast(isCors ? 'Open this file via a web server (not file://)' : 'Connection failed — check key & URL', 'err');
+    const onFile = location.protocol==='file:'||location.protocol==='content:';
+    const isFetch = err.message==='Failed to fetch'||err.message.includes('NetworkError')||err.message.includes('Load failed');
+    let msg = err.message||'Unknown error';
+    if(isFetch && onFile){
+      msg = 'Open via https:// — file:// blocks API';
+    } else if(isFetch){
+      msg = 'Cannot reach server — check endpoint URL';
+    }
+    setDot(e,'err',msg.slice(0,50));
+    toast('Failed: '+msg.slice(0,70),'err');
+    /* also log full error for debugging */
+    console.error('testConn error:',err.message,'url:',url,'model:',model);
   }
 }
 
@@ -522,6 +731,811 @@ function updSlider(el){
    STATE
 ========================================================= */
 let msgs=[], allSk=[], cv=[3,3], vhist=[], SRC='', _rlt=null, currentProject='My Claude Project', currentInstructions='';
+
+/* =========================================================
+   SKILLS LIBRARY
+========================================================= */
+
+/* ── Built-in skill repository ── */
+const BUILTIN_SKILLS = [
+  {
+    id:'bi-research', name:'Deep Research', category:'Research', icon:'🔍',
+    source:'built-in',
+    desc:'Systematic multi-source research with synthesis and citations.',
+    triggers:['research','find information','look up','investigate','gather data'],
+    content:`---
+name: deep-research
+description: Systematic multi-source research with synthesis and citations
+triggers: research, find information, look up, investigate, gather data
+version: 1.0
+---
+
+# Deep Research
+
+## Purpose
+Guides Claude to conduct thorough, multi-angle research on any topic, synthesise findings from multiple perspectives, and present them in a structured, citable format. Use this skill whenever the user needs more than surface-level information.
+
+## When To Use
+- User asks to "research", "investigate", or "find out about" a topic
+- Question requires gathering and synthesising multiple viewpoints
+- User needs a comprehensive overview rather than a quick answer
+
+## Process
+1. **Scope**: Clarify the research question and identify what a complete answer requires
+2. **Breadth**: Cover at least 3-5 distinct angles or sources
+3. **Depth**: For each angle, go beyond definitions to implications and examples
+4. **Synthesise**: Draw connections between findings
+5. **Structure**: Present with clear headings, key takeaways, and confidence levels
+
+## Output Format
+Use headers (##) for each major section. Include a **Key Findings** summary at the top and a **Further Reading** list at the end. Flag uncertain claims with "(unverified)".
+
+## Example
+User: "Research the current state of AI memory systems"
+Response: Begins with Key Findings summary, then covers: vector databases, episodic vs semantic memory, leading implementations (mem0, Zep, MemGPT), limitations, and open research questions.
+
+## Quality Checks
+- [ ] At least 3 distinct perspectives covered
+- [ ] Claims distinguished from speculation
+- [ ] Practical implications included
+`
+  },
+  {
+    id:'bi-writing', name:'Professional Writing', category:'Writing', icon:'✍️',
+    source:'built-in',
+    desc:'Polished professional writing with tone matching and structure.',
+    triggers:['write','draft','compose','create a document','write an email'],
+    content:`---
+name: professional-writing
+description: Polished professional writing with tone matching and structure
+triggers: write, draft, compose, create document, write email
+version: 1.0
+---
+
+# Professional Writing
+
+## Purpose
+Produces polished, audience-appropriate written content — emails, reports, proposals, documentation — with correct tone, structure, and clarity. Adapts style from formal to friendly based on context.
+
+## When To Use
+- User asks to draft, write, or compose any document
+- Email, memo, report, proposal, or announcement needed
+- User needs to communicate a complex idea clearly
+
+## Process
+1. **Audience**: Identify who will read this and their expectations
+2. **Purpose**: Clarify the single core message or goal
+3. **Structure**: Choose appropriate format (email, report, bullet list, narrative)
+4. **Draft**: Write with active voice, concrete language, short paragraphs
+5. **Refine**: Check tone matches audience, remove jargon, strengthen opening/closing
+
+## Output Format
+Deliver the complete document ready to use. Include a brief note at the end explaining any tone or structural choices made.
+
+## Example
+User: "Draft an email to my team announcing a deadline change"
+Response: Delivers a ready-to-send email with subject line, appropriate greeting, clear explanation, impact acknowledgment, and positive close.
+
+## Quality Checks
+- [ ] Opening sentence states purpose immediately
+- [ ] One idea per paragraph
+- [ ] Tone matches the stated audience
+`
+  },
+  {
+    id:'bi-code-review', name:'Code Review', category:'Coding', icon:'🧑‍💻',
+    source:'built-in',
+    desc:'Thorough code review covering bugs, security, performance, and style.',
+    triggers:['review code','check my code','code review','audit code'],
+    content:`---
+name: code-review
+description: Thorough code review covering bugs, security, performance, and style
+triggers: review code, check my code, code review, audit code
+version: 1.0
+---
+
+# Code Review
+
+## Purpose
+Performs systematic code review identifying bugs, security vulnerabilities, performance issues, and style violations. Provides prioritised, actionable feedback rather than a list of nitpicks.
+
+## When To Use
+- User pastes code and asks for review or feedback
+- User asks what's wrong with their implementation
+- Pre-deployment review needed
+
+## Process
+1. **Understand**: Read fully before commenting — understand intent
+2. **Critical issues**: Flag bugs, security holes, data loss risks first
+3. **Performance**: Identify O(n²) patterns, unnecessary re-renders, memory leaks
+4. **Maintainability**: Note unclear naming, missing error handling, tight coupling
+5. **Style**: Minor suggestions last, clearly labelled as optional
+
+## Output Format
+Use severity labels: 🔴 Critical · 🟡 Warning · 🟢 Suggestion. Group by severity. End with a 2-sentence overall assessment.
+
+## Example
+User: [pastes SQL query]
+Response: Flags SQL injection risk (🔴), missing index on WHERE clause (🟡), and suggests using parameterised queries with a corrected example.
+
+## Quality Checks
+- [ ] Critical issues listed before style suggestions
+- [ ] Each issue includes a fix, not just the problem
+- [ ] Overall verdict given at the end
+`
+  },
+  {
+    id:'bi-planning', name:'Project Planning', category:'Productivity', icon:'📋',
+    source:'built-in',
+    desc:'Break any project into phases, tasks, and milestones with realistic timelines.',
+    triggers:['plan','create a plan','project plan','roadmap','break down','milestones'],
+    content:`---
+name: project-planning
+description: Break projects into phases, tasks, and milestones with realistic timelines
+triggers: plan, create a plan, project plan, roadmap, break down, milestones
+version: 1.0
+---
+
+# Project Planning
+
+## Purpose
+Transforms a vague project idea into a structured plan with phases, concrete tasks, dependencies, and realistic timelines. Surfaces risks and resource requirements upfront.
+
+## When To Use
+- User wants to plan a new project or initiative
+- Complex task needs breaking into manageable steps
+- Timeline or resource estimate needed
+
+## Process
+1. **Define scope**: What's in and explicitly out of scope
+2. **Phases**: Group work into 3-5 logical phases (setup, build, test, launch)
+3. **Tasks**: Break each phase into concrete, assignable tasks (2-5 day chunks)
+4. **Dependencies**: Identify what must happen before what
+5. **Risks**: List top 3 risks and mitigation for each
+
+## Output Format
+Present as: Overview → Phases (with week estimates) → Task list (checkbox format) → Risk register → Next immediate action.
+
+## Example
+User: "Plan a customer survey and analysis project"
+Response: Scopes the project, defines 4 phases (design/distribute/collect/analyse), lists ~15 tasks with effort estimates, flags low response rate as key risk.
+
+## Quality Checks
+- [ ] Every task is concrete and actionable
+- [ ] Dependencies clearly noted
+- [ ] First action clearly identified
+`
+  },
+  {
+    id:'bi-analysis', name:'Data Analysis', category:'Analysis', icon:'📊',
+    source:'built-in',
+    desc:'Structured analysis of data, metrics, or findings with actionable insights.',
+    triggers:['analyse','analyze','what does this data','interpret','metrics','trends'],
+    content:`---
+name: data-analysis
+description: Structured analysis of data, metrics, or findings with actionable insights
+triggers: analyse, analyze, what does this data, interpret, metrics, trends
+version: 1.0
+---
+
+# Data Analysis
+
+## Purpose
+Provides structured, insight-driven analysis of data, metrics, survey results, or any numerical information. Goes beyond describing what the numbers are to explaining what they mean and what to do.
+
+## When To Use
+- User shares data, spreadsheet content, or metrics
+- Results need interpretation or pattern identification
+- User asks "what does this tell us" about numbers
+
+## Process
+1. **Orient**: Understand what was measured and why
+2. **Describe**: Key statistics — range, average, outliers
+3. **Patterns**: Trends, correlations, anomalies
+4. **Meaning**: What do patterns indicate about the underlying situation
+5. **Actions**: 2-3 specific decisions or next steps the data supports
+
+## Output Format
+Structure: Summary (2 sentences) → Key Findings (3-5 bullets) → What This Means → Recommended Actions → Caveats/Limitations.
+
+## Example
+User: [pastes NPS score data by month]
+Response: Identifies declining trend in Q3, correlates with product release timing, recommends follow-up survey targeting Q3 cohort.
+
+## Quality Checks
+- [ ] Patterns explained, not just described
+- [ ] Limitations and confidence levels noted
+- [ ] Actions tied directly to findings
+`
+  },
+  {
+    id:'bi-explain', name:'Clear Explanation', category:'Communication', icon:'💡',
+    source:'built-in',
+    desc:'Explain complex topics clearly at the right level for the audience.',
+    triggers:['explain','what is','how does','help me understand','simplify','teach me'],
+    content:`---
+name: clear-explanation
+description: Explain complex topics clearly at the right level for the audience
+triggers: explain, what is, how does, help me understand, simplify, teach me
+version: 1.0
+---
+
+# Clear Explanation
+
+## Purpose
+Makes complex, technical, or abstract topics understandable for the specific audience without dumbing down. Uses analogies, concrete examples, and progressive layering to build real understanding.
+
+## When To Use
+- User asks "what is" or "how does" something work
+- Technical concept needs non-technical explanation
+- User explicitly asks to simplify or explain something
+
+## Process
+1. **Calibrate**: Gauge the user's existing knowledge level
+2. **Core idea**: State the single most important thing to understand in one sentence
+3. **Analogy**: Find a real-world comparison that makes it click
+4. **Mechanics**: Explain how it actually works, step by step
+5. **Example**: Concrete, specific example from the user's context
+
+## Output Format
+Start with the one-sentence core idea. Use an analogy before getting technical. Keep paragraphs to 3 sentences max. End with "In practice, this means…" to ground it.
+
+## Example
+User: "Explain how vector embeddings work"
+Response: Opens with core idea (numbers that capture meaning), uses library card catalogue analogy, explains dimensionality, gives concrete example with "king - man + woman = queen".
+
+## Quality Checks
+- [ ] Starts with simplest possible framing
+- [ ] Includes at least one concrete example
+- [ ] Avoids jargon without defining it first
+`
+  },
+  {
+    id:'bi-prompt-eng', name:'Prompt Engineering', category:'Productivity', icon:'🎯',
+    source:'built-in',
+    desc:'Design, test, and refine prompts for Claude and other LLMs.',
+    triggers:['write a prompt','improve this prompt','prompt for','system prompt','prompt engineering'],
+    content:`---
+name: prompt-engineering
+description: Design, test, and refine prompts for Claude and other LLMs
+triggers: write a prompt, improve this prompt, prompt for, system prompt, prompt engineering
+version: 1.0
+---
+
+# Prompt Engineering
+
+## Purpose
+Designs effective prompts and system prompts for Claude and other LLMs. Applies proven techniques — role assignment, few-shot examples, chain-of-thought, output format specification — to get reliable, high-quality responses.
+
+## When To Use
+- User needs a system prompt for a Claude project
+- Existing prompt produces inconsistent or poor results
+- User wants to build a reliable AI workflow
+
+## Process
+1. **Goal**: Define the exact output desired — format, length, tone, content
+2. **Role**: Assign a specific, relevant persona to the model
+3. **Context**: Provide necessary background inline
+4. **Constraints**: State what NOT to do as clearly as what to do
+5. **Format**: Specify output structure explicitly; add examples if helpful
+
+## Output Format
+Deliver the complete prompt in a code block, ready to paste. Follow with a brief rationale explaining each major design choice.
+
+## Example
+User: "Write a system prompt for a customer support agent"
+Response: Delivers complete system prompt with role, tone, escalation rules, format requirements, and prohibited responses. Explains each section choice.
+
+## Quality Checks
+- [ ] Role and goal stated in first sentence
+- [ ] Output format explicitly defined
+- [ ] At least one constraint (what NOT to do) included
+`
+  },
+  {
+    id:'bi-debug', name:'Debugging Assistant', category:'Coding', icon:'🐛',
+    source:'built-in',
+    desc:'Systematic debugging: identify root cause, not just symptoms.',
+    triggers:['debug','fix this error','not working','error','exception','bug'],
+    content:`---
+name: debugging-assistant
+description: Systematic debugging — identify root cause not just symptoms
+triggers: debug, fix this error, not working, error, exception, bug
+version: 1.0
+---
+
+# Debugging Assistant
+
+## Purpose
+Guides systematic debugging by identifying the root cause of errors rather than patching symptoms. Works through the problem methodically, explains what's happening, and provides a fix with reasoning.
+
+## When To Use
+- User shares an error message or unexpected behaviour
+- Code isn't working as expected
+- User asks "why" something fails
+
+## Process
+1. **Reproduce**: Understand exactly when and how the error occurs
+2. **Read the error**: Parse the error message literally — what line, what type
+3. **Hypothesis**: Form 2-3 possible root causes ranked by likelihood
+4. **Isolate**: Identify the minimal code that demonstrates the issue
+5. **Fix and explain**: Provide the corrected code with explanation of what was wrong and why
+
+## Output Format
+Structure: What's happening (1-2 sentences) → Root cause → Fixed code (in code block) → Explanation → How to prevent this in future.
+
+## Example
+User: "Getting TypeError: Cannot read property 'map' of undefined"
+Response: Identifies that data is undefined at render time, explains async timing issue, provides fix with optional chaining or loading state, explains defensive programming pattern.
+
+## Quality Checks
+- [ ] Root cause explained, not just fixed
+- [ ] Fix shown in complete, runnable code block
+- [ ] Prevention advice included
+`
+  },
+];
+
+/* ── Skills library state ── */
+let userSkills = [];      // user-created/uploaded
+let packSkillIds = new Set(); // IDs of skills added to current pack
+let skCatFilter  = 'all';
+let _skEditTarget = null; // null = new, or skill id = editing
+
+/* ── Tab switching ── */
+function switchTab(tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  $('tab-'+tab).classList.add('active');
+  $('panel-'+tab).classList.add('active');
+  if(tab==='skills')renderSkLib();
+}
+
+/* ── URL Skill Generator ── */
+function toggleUrlSection(){
+  const body = $('sk-url-body');
+  const icon = $('url-toggle-icon');
+  const open = body.classList.toggle('open');
+  if(icon) icon.textContent = open ? '▲ collapse' : '▼ expand';
+}
+function setUrlExample(val){ const i=$('sk-url-inp'); if(i){i.value=val;i.focus();} }
+
+async function genFromUrl(){
+  const raw = ($('sk-url-inp')?.value||'').trim();
+  if(!raw){ toast('Enter a URL or GitHub repo first','warn'); return; }
+  if(!g('p-url')||!g('p-key')){ toast('Configure Power Engine first (⚙️ Setup)','warn'); return; }
+
+  const btn=$('url-go-btn');
+  const prog=$('sk-url-progress');
+  const bar=$('sk-url-prog-bar');
+  const status=$('sk-url-status');
+
+  btn.disabled=true;
+  prog.classList.add('show');
+  bar.style.width='0%';
+
+  function setStep(pct, msg){ bar.style.width=pct+'%'; if(status) status.textContent=msg; }
+
+  try{
+    setStep(10,'Fetching content…');
+
+    // Determine source type and fetch raw text
+    let rawContent = '';
+    let sourceLabel = raw;
+
+    // GitHub owner/repo shorthand or full github URL
+    const ghMatch = raw.match(/^(?:https?:\/\/github\.com\/)?([a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+)\/?$/);
+    if(ghMatch){
+      const repo = ghMatch[1];
+      sourceLabel = 'GitHub: '+repo;
+      setStep(15,'Fetching GitHub README…');
+      rawContent = await fetchGitHub(repo);
+    } else {
+      // Regular URL — use allorigins CORS proxy
+      setStep(15,'Fetching page via proxy…');
+      rawContent = await fetchUrl(raw);
+    }
+
+    if(!rawContent || rawContent.length < 100){
+      throw new Error('Could not fetch content from that URL. Try pasting the page text manually using ⬆️ Upload SKILL.md.');
+    }
+
+    // Trim to ~12,000 chars to stay within token budget
+    const trimmed = rawContent.length > 12000
+      ? rawContent.slice(0,12000) + '\n\n[... content truncated for token limit ...]'
+      : rawContent;
+
+    setStep(40,'Sending to AI — generating SKILL.md…');
+
+    const prompt = `You are a Claude Skill writer. Based on the following documentation content, generate a complete, production-ready SKILL.md file for Claude.
+
+Source: ${sourceLabel}
+
+REQUIREMENTS:
+- The SKILL.md must be specific to this exact technology/library/tool
+- Include real API names, functions, patterns from the content
+- Minimum 300 lines
+- Use this exact format:
+
+---
+name: [kebab-case-name]
+description: [One sentence: what this skill enables Claude to do with this technology]
+triggers: [comma, separated, trigger, phrases]
+version: 1.0
+source: ${sourceLabel}
+---
+
+# [Technology Name] Skill
+
+## Purpose
+[3 sentences explaining what this skill enables, who uses it, and what outcomes it produces]
+
+## When To Use This Skill
+- [Specific scenario 1 with real technology context]
+- [Specific scenario 2]
+- [Specific scenario 3]
+- [Specific scenario 4]
+
+## Key Concepts
+[List the 5-8 most important concepts from the docs with brief explanations]
+
+## Common Patterns
+[3-5 real code patterns or usage examples from the documentation]
+
+## Process
+1. **[Step]**: [Detailed instruction]
+2. **[Step]**: [Detailed instruction]
+3. **[Step]**: [Detailed instruction]
+4. **[Step]**: [Detailed instruction]
+5. **[Step]**: [Detailed instruction]
+
+## Output Format
+[How Claude should structure responses using this skill]
+
+## Example
+User: "[Realistic prompt that would activate this skill]"
+Response approach: [First 3-4 sentences of what an ideal response looks like]
+
+## Quick Reference
+[Key commands, functions, config options, or API methods from the documentation]
+
+## Quality Checks
+- [ ] Response uses actual API/function names from the docs
+- [ ] Code examples follow patterns from the documentation
+- [ ] Covers both basic and advanced usage
+
+---
+
+DOCUMENTATION CONTENT:
+${trimmed}
+
+Output ONLY the SKILL.md content. Start with the --- frontmatter block.`;
+
+    const data = await apiCall(g('p-url'), g('p-key'), g('p-model'),
+      [{role:'user', content: prompt}], 4000);
+    const skillContent = data.choices?.[0]?.message?.content||'';
+
+    if(!skillContent || skillContent.length < 100){
+      throw new Error('AI returned empty response. Check your API key and try again.');
+    }
+
+    setStep(85,'Parsing skill…');
+
+    // Extract metadata from generated SKILL.md
+    const nameMatch = skillContent.match(/^name:\s*(.+)$/m);
+    const descMatch = skillContent.match(/^description:\s*(.+)$/m);
+    const trigMatch = skillContent.match(/^triggers:\s*(.+)$/m);
+
+    // Derive display name from source if not in content
+    let skillName = nameMatch ? nameMatch[1].trim() : '';
+    if(!skillName){
+      if(ghMatch) skillName = ghMatch[1].split('/')[1].replace(/-/g,' ').replace(/\b\w/g,l=>l.toUpperCase());
+      else skillName = raw.replace(/https?:\/\//,'').split('/')[0].replace(/\./g,' ').split(' ').slice(-2).join(' ');
+    }
+    skillName = skillName.replace(/\b\w/g,l=>l.toUpperCase());
+
+    const skillDesc = descMatch ? descMatch[1].trim() : 'Generated skill for '+skillName;
+    const triggers = trigMatch ? trigMatch[1].split(',').map(t=>t.trim()).filter(Boolean) : [skillName.toLowerCase()];
+
+    // Detect category
+    const lo = skillContent.toLowerCase();
+    const cat = lo.includes('web')&&lo.includes('api')?'Coding':
+                lo.includes('test')?'Coding':
+                lo.includes('data')||lo.includes('analys')?'Analysis':
+                lo.includes('write')||lo.includes('document')?'Writing':
+                lo.includes('research')||lo.includes('search')?'Research':'Coding';
+
+    // Save to user skills
+    const id = 'user-url-'+Date.now();
+    userSkills.push({
+      id, name:skillName, desc:skillDesc, category:cat,
+      icon:'🌐', source:'user', triggers, content:skillContent
+    });
+    saveSkills();
+
+    setStep(100,'Skill created!');
+
+    setTimeout(()=>{
+      prog.classList.remove('show');
+      bar.style.width='0%';
+      btn.disabled=false;
+      $('sk-url-inp').value='';
+    }, 1500);
+
+    renderSkLib();
+    setCat('user'); // switch to My Skills to show the new one
+    toast('Skill "'+skillName+'" created from '+sourceLabel+'! ✓','ok');
+
+  }catch(err){
+    setStep(0,'');
+    prog.classList.remove('show');
+    btn.disabled=false;
+    toast('Failed: '+err.message.slice(0,80),'err');
+    console.error('genFromUrl error:',err);
+  }
+}
+
+async function fetchGitHub(repo){
+  // Try README first via raw GitHub
+  const branches = ['main','master','development','dev'];
+  const files = ['README.md','readme.md','README.rst','docs/README.md','SKILL.md'];
+
+  for(const branch of branches){
+    for(const file of files){
+      try{
+        const url = `https://raw.githubusercontent.com/${repo}/${branch}/${file}`;
+        const r = await fetch(url);
+        if(r.ok){
+          const text = await r.text();
+          if(text.length > 50) return `# ${repo} — ${file}\n\n` + text;
+        }
+      }catch(e){}
+    }
+  }
+
+  // Fallback: GitHub API for repo description + topics
+  try{
+    const r = await fetch(`https://api.github.com/repos/${repo}`);
+    if(r.ok){
+      const data = await r.json();
+      const topics = (data.topics||[]).join(', ');
+      return `# ${repo}\n\nDescription: ${data.description||'No description'}\nLanguage: ${data.language||'Unknown'}\nStars: ${data.stargazers_count}\nTopics: ${topics}\n\nHomepage: ${data.homepage||''}\n\nThis repository has no publicly accessible README. Generate a skill based on the name, description, language and topics above.`;
+    }
+  }catch(e){}
+
+  throw new Error(`Could not fetch GitHub repo "${repo}". Check the repo name (format: owner/repo).`);
+}
+
+async function fetchUrl(url){
+  // Use allorigins.win CORS proxy — free, no key needed
+  const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+  const r = await fetch(proxyUrl);
+  if(!r.ok) throw new Error(`Proxy returned ${r.status}`);
+  const data = await r.json();
+  let html = data.contents || '';
+
+  // Strip HTML tags and clean up text
+  html = html
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'')
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi,'')
+    .replace(/<nav[^>]*>[\s\S]*?<\/nav>/gi,'')
+    .replace(/<header[^>]*>[\s\S]*?<\/header>/gi,'')
+    .replace(/<footer[^>]*>[\s\S]*?<\/footer>/gi,'')
+    .replace(/<[^>]+>/g,' ')
+    .replace(/\s{3,}/g,'\n\n')
+    .replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ')
+    .trim();
+
+  if(!html || html.length < 50) throw new Error('Page returned empty content. It may be JavaScript-rendered.');
+  return html;
+}
+
+/* ── Load / save user skills ── */
+function loadSkills(){
+  try{
+    const raw=localStorage.getItem('cf33_user_skills');
+    if(raw)userSkills=JSON.parse(raw);
+  }catch(e){userSkills=[];}
+}
+function saveSkills(){
+  localStorage.setItem('cf33_user_skills',JSON.stringify(userSkills));
+}
+
+/* ── Category filter ── */
+function setCat(cat){
+  skCatFilter=cat;
+  document.querySelectorAll('.sk-cat').forEach(el=>{
+    el.classList.toggle('active',el.dataset.cat===cat);
+  });
+  renderSkLib();
+}
+
+/* ── Render the library grid ── */
+function renderSkLib(){
+  const query=($('sk-search')?.value||'').toLowerCase().trim();
+  const all=[...BUILTIN_SKILLS,...userSkills];
+  const filtered=all.filter(sk=>{
+    if(skCatFilter==='built-in' && sk.source!=='built-in')return false;
+    if(skCatFilter==='user'     && sk.source!=='user')return false;
+    if(skCatFilter==='in-pack'  && !packSkillIds.has(sk.id))return false;
+    if(query){
+      const hay=(sk.name+sk.desc+sk.category+(sk.triggers||[]).join(' ')).toLowerCase();
+      if(!hay.includes(query))return false;
+    }
+    return true;
+  });
+
+  const list=$('sk-list');
+  const empty=$('sk-empty');
+  if(!list)return;
+
+  if(filtered.length===0){
+    list.style.display='none';
+    if(empty)empty.style.display='flex';
+    return;
+  }
+  list.style.display='grid';
+  if(empty)empty.style.display='none';
+
+    list.innerHTML=filtered.map(function(sk){
+    var inPack=packSkillIds.has(sk.id);
+    var tags='<span class="sk-tag">'+eH(sk.category)+'</span>';
+    (sk.triggers||[]).slice(0,3).forEach(function(t){tags+='<span class="sk-tag">'+eH(t)+'</span>';});
+    var delBtn=sk.source==='user'?'<button class="ska-del" onclick="deleteUserSkill(\''+sk.id+'\')">✕</button>':'';
+    return '<div class="sk-card'+(inPack?' in-pack':'')+'" id="skc-'+sk.id+'">'
+      +'<div class="sk-card-icon">'+(sk.icon||'🛠')+'</div>'
+      +'<div class="sk-card-name">'+eH(sk.name)+'</div>'
+      +'<div class="sk-card-desc">'+eH(sk.desc)+'</div>'
+      +'<div class="sk-card-tags">'+tags+'</div>'
+      +'<div class="sk-card-source '+(sk.source==='built-in'?'built-in':'user')+'">'+(sk.source==='built-in'?'📦 Built-in':'👤 Your skill')+'</div>'
+      +'<div class="sk-card-actions">'
+      +'<button class="ska-add'+(inPack?' added':'')+'" onclick="togglePackSkill(\''+sk.id+'\')">'+(inPack?'✓ In Pack':'＋ Add to Pack')+'</button>'
+      +'<button class="ska-view" onclick="viewLibSkill(\''+sk.id+'\')">View</button>'
+      +delBtn
+      +'</div></div>';
+  }).join('');
+
+  // update count badge
+  const badge=$('sk-count-badge');
+  if(badge){
+    badge.textContent=packSkillIds.size||'';
+    badge.style.display=packSkillIds.size>0?'inline':'none';
+  }
+}
+
+function togglePackSkill(id){
+  const all=[...BUILTIN_SKILLS,...userSkills];
+  const sk=all.find(s=>s.id===id);
+  if(!sk)return;
+  if(packSkillIds.has(id)){
+    packSkillIds.delete(id);
+    // remove from allSk pack
+    allSk=allSk.filter(s=>s.name!==sk.name);
+    toast(sk.name+' removed from pack','warn');
+  } else {
+    packSkillIds.add(id);
+    // add to allSk if not already there
+    if(!allSk.find(s=>s.name===sk.name)){
+      allSk.push({name:sk.name,content:sk.content});
+    }
+    toast(sk.name+' added to pack ✓','ok');
+  }
+  renderSkLib();
+}
+
+function viewLibSkill(id){
+  const all=[...BUILTIN_SKILLS,...userSkills];
+  const sk=all.find(s=>s.id===id);
+  if(!sk)return;
+  openSKM(sk.name,sk.content);
+}
+
+function deleteUserSkill(id){
+  if(!confirm('Delete this skill? This cannot be undone.'))return;
+  userSkills=userSkills.filter(s=>s.id!==id);
+  packSkillIds.delete(id);
+  allSk=allSk.filter(s=>!userSkills.every(us=>us.name!==s.name));
+  saveSkills();renderSkLib();
+  toast('Skill deleted');
+}
+
+/* ── File upload ── */
+function triggerUpload(){$('sk-file-input').click()}
+async function handleUpload(e){
+  const files=Array.from(e.target.files);
+  let added=0;
+  for(const file of files){
+    const text=await file.text();
+    const nameMatch=text.match(/^name:\s*(.+)$/m);
+    const descMatch=text.match(/^description:\s*(.+)$/m);
+    const trigMatch=text.match(/^triggers:\s*(.+)$/m);
+    const name=nameMatch?nameMatch[1].trim():file.name.replace(/\.md$/i,'').replace(/-/g,' ');
+    const desc=descMatch?descMatch[1].trim():'Uploaded skill';
+    const triggers=trigMatch?trigMatch[1].split(',').map(t=>t.trim()):[];
+    const id='user-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);
+    userSkills.push({id,name,desc,category:'Custom',icon:'📄',source:'user',triggers,content:text});
+    added++;
+  }
+  saveSkills();renderSkLib();
+  toast(`${added} skill${added!==1?'s':''} uploaded!`,'ok');
+  e.target.value='';
+  switchTab('skills');
+}
+
+/* ── Skill editor ── */
+function openSkEditor(id){
+  _skEditTarget=id;
+  if(id){
+    const sk=userSkills.find(s=>s.id===id);
+    if(!sk)return;
+    $('sk-ed-title').textContent='Edit Skill';
+    $('sed-name').value=sk.name;
+    $('sed-desc').value=sk.desc;
+    $('sed-cat').value=sk.category;
+    $('sed-triggers').value=(sk.triggers||[]).join(', ');
+    $('sed-content').value=sk.content;
+  } else {
+    $('sk-ed-title').textContent='New Skill';
+    $('sed-name').value='';$('sed-desc').value='';
+    $('sed-cat').value='Custom';$('sed-triggers').value='';
+    $('sed-content').value=`---
+name: my-skill
+description: What this skill does
+triggers: trigger phrase 1, trigger phrase 2
+version: 1.0
+---
+
+# My Skill
+
+## Purpose
+Explain what this skill enables Claude to do.
+
+## When To Use
+- Scenario 1
+- Scenario 2
+
+## Process
+1. Step one
+2. Step two
+3. Step three
+
+## Output Format
+Describe how Claude should format responses when this skill is active.
+
+## Example
+User: "Example prompt"
+Response approach: What a good response looks like.
+
+## Quality Checks
+- [ ] Check 1
+- [ ] Check 2
+`;
+  }
+  $('sk-editor').classList.add('on');
+}
+function closeSkEditor(){$('sk-editor').classList.remove('on')}
+function skEdBg(e){if(e.target===$('sk-editor'))closeSkEditor()}
+
+function saveSkEditor(){
+  const name=$('sed-name').value.trim();
+  const desc=$('sed-desc').value.trim();
+  const content=$('sed-content').value.trim();
+  if(!name){toast('Enter a skill name','warn');return}
+  if(!content){toast('Enter skill content','warn');return}
+  const triggers=$('sed-triggers').value.split(',').map(t=>t.trim()).filter(Boolean);
+  const category=$('sed-cat').value||'Custom';
+  const slug=name.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+
+  if(_skEditTarget){
+    const idx=userSkills.findIndex(s=>s.id===_skEditTarget);
+    if(idx>-1)userSkills[idx]={...userSkills[idx],name,desc,category,triggers,content};
+  } else {
+    const id='user-'+Date.now();
+    userSkills.push({id,name,desc,category,icon:'🛠',source:'user',triggers,content});
+  }
+  saveSkills();renderSkLib();closeSkEditor();
+  toast('Skill saved ✓','ok');
+}
 
 /* =========================================================
    ROUTING
@@ -612,14 +1626,22 @@ async function runPower(r,text){
   try{
     const d=await apiCall(g('p-url'),g('p-key'),g('p-model'),[...hist,{role:'user',content:text}],4096,ARCHSYS);
     const reply=d.choices?.[0]?.message?.content||'(empty)';
-    hideTyping();addAI('power',reply,r.why);
+    hideTyping();addAI('power',reply,r.why,true);
     msgs.push({role:'assistant',content:reply,eng:'power'});
     parseBuild(reply);
   }catch(e){
-    hideTyping();const isCors=e.message==='Failed to fetch'||e.message.includes('NetworkError')||e.message.includes('CORS');
-    addAI('power', isCors
-      ? '⚠️ **CORS Error — API call blocked.**\n\nThis happens when the file is opened directly from disk (file:// URL).\n\n**Fix:** Serve the file over HTTP:\n\n```\npython3 -m http.server 8000\n```\nThen open **http://localhost:8000/claudeforge_V3.3.html** in your browser.'
-      : '⚠️ **Power engine error:** '+(e.message||'Unknown error'));
+    hideTyping();
+    const onFile = location.protocol==='file:'||location.protocol==='content:';
+    const isFetch = e.message==='Failed to fetch'||e.message.includes('NetworkError');
+    let errMsg;
+    if(isFetch && onFile){
+      errMsg = '⚠️ **Open via https:// to use the API.**\n\nAPI calls are blocked when the file is opened locally. Host on GitHub Pages or run:\n```\npython3 -m http.server 8000\n```\nThen open `http://localhost:8000`';
+    } else if(isFetch){
+      errMsg = '⚠️ **Could not reach the API.**\n\nCheck:\n- API endpoint URL is correct: `'+g('p-url')+'`\n- Your internet connection is working\n- The API service is online\n\nClick **Test ✓** in the sidebar to debug.';
+    } else {
+      errMsg = '⚠️ **API error:** '+(e.message||'Unknown error');
+    }
+    addAI('power', errMsg);
   }
 }
 
@@ -638,12 +1660,13 @@ function addUser(text){
   d.innerHTML='<div class="av av-u">U</div><div class="mc"><div class="bub u">'+eH(text).replace(/\n/g,'<br>')+'</div></div>';
   c.appendChild(d);sc();
 }
-function addAI(eng,md,why=''){
+function addAI(eng,md,why='',showPackBtn=false){
   const c=$('chat'),d=document.createElement('div');d.className='msg';
   const avC=eng==='power'?'av-p':'av-f',avL=eng==='power'?'🧠':'⚡';
   const etC=eng==='power'?'et-p':'et-f';
   const ml=eng==='power'?(g('p-model')||'Power LLM'):(g('f-model')||'Fast LLM');
-  d.innerHTML='<div class="av '+avC+'">'+avL+'</div><div class="mc"><div class="etag '+etC+'">'+eH(ml)+(why?' · '+eH(why):'')+'</div><div class="bub">'+md2h(md)+'</div></div>';
+  const packBtn=showPackBtn?'<button class="dl-pack-btn" onclick="downloadPack()">📦 Download Project Pack</button>':'';
+  d.innerHTML='<div class="av '+avC+'">'+avL+'</div><div class="mc"><div class="etag '+etC+'">'+eH(ml)+(why?' · '+eH(why):'')+'</div><div class="bub">'+md2h(md)+'</div>'+packBtn+'</div>';
   c.appendChild(d);sc();
   d.querySelectorAll('.sk-chip').forEach(ch=>ch.addEventListener('click',()=>openSKM(ch.dataset.name,ch.dataset.content)));
 }
@@ -729,10 +1752,6 @@ function parseBuild(text){
     }
   });
 
-  /* show download button if we have skills or project name */
-  if(allSk.length>0||currentProject){
-    const btn=$("dl-btn");if(btn)btn.style.display='flex';
-  }
 }
 function skillTpl(n,extracted){
   if(extracted)return extracted;
@@ -754,62 +1773,115 @@ function dlSK(){if(!_sk)return;const b=new Blob([_sk.content],{type:'text/markdo
    DOWNLOAD PROJECT PACK
 ========================================================= */
 async function downloadPack(){
-  if(typeof JSZip==='undefined'){toast('JSZip not loaded — check internet connection','err');return;}
-  if(allSk.length===0&&!currentProject){toast('Send a message first to generate your project pack','warn');return;}
+  if(typeof JSZip==='undefined'){
+    toast('JSZip not loaded — check internet connection','err');return;
+  }
 
-  const zip=new JSZip();
-  const projName=currentProject||'My Claude Project';
-  const folderName=projName.replace(/[^a-zA-Z0-9\s-]/g,'').trim().replace(/\s+/g,'-');
-  const folder=zip.folder(folderName);
+  const zip      = new JSZip();
+  const projName = (currentProject||'My Claude Project').replace(/[<>:"/\\|?*]/g,'').trim();
+  const slug     = projName.replace(/\s+/g,'-');
+  const folder   = zip.folder(slug);
+  const skFolder = folder.folder('skills');
+  const now      = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
 
-  /* 1. INSTRUCTIONS.md — Claude project custom instructions */
-  const instrContent=currentInstructions||buildDefaultInstructions(projName);
-  folder.file('INSTRUCTIONS.md',
-    '# '+projName+' — Claude Project Instructions\n\n'+
-    '> Paste the content below into your Claude Project\'s **Custom Instructions** field.\n\n'+
-    '---\n\n'+instrContent+'\n\n---\n\n'+
-    '*Generated by ClaudeForge · https://github.com/nialless/claudeforge*'
-  );
+  /* ── Build instructions content ── */
+  const instrBody = currentInstructions || buildDefaultInstructions(projName);
 
-  /* 2. One SKILL.md per skill in its own subfolder */
-  const skillsFolder=folder.folder('skills');
-  allSk.forEach(sk=>{
-    const slug=sk.name.toLowerCase().replace(/[^a-z0-9]+/g,'-');
-    const skFolder=skillsFolder.folder(slug);
-    skFolder.file('SKILL.md',sk.content);
+  folder.file('INSTRUCTIONS.md', [
+    '# ' + projName + ' — Claude Project Instructions',
+    '',
+    '> **How to use:** Copy everything between the dashed lines below into your Claude Project\'s **Custom Instructions** field at claude.ai → Projects → [Your Project] → Project Instructions.',
+    '',
+    '---',
+    '',
+    instrBody,
+    '',
+    '---',
+    '',
+    '_Generated by [ClaudeForge](https://nialless.github.io/ClaudeForge/) on ' + now + '_',
+  ].join('\n'));
+
+  /* ── One SKILL.md per skill ── */
+  allSk.forEach(sk => {
+    const skSlug = sk.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+    skFolder.folder(skSlug).file('SKILL.md', sk.content);
   });
 
-  /* 3. README.md — quick start guide */
-  folder.file('README.md',
-    '# '+projName+'\n\n'+
-    '## Quick Start\n\n'+
-    '1. Go to **claude.ai** → **Projects** → **New Project**\n'+
-    '2. Name it: **'+projName+'**\n'+
-    '3. Open **Project Instructions** and paste the full contents of `INSTRUCTIONS.md`\n'+
-    '4. For each folder in `/skills/`, upload the `SKILL.md` file to your Claude Project knowledge\n'+
-    '5. Start chatting using the starter prompts in INSTRUCTIONS.md\n\n'+
-    '## Files in this Pack\n\n'+
-    '| File | Purpose |\n'+
-    '|------|---------|\n'+
-    '| `INSTRUCTIONS.md` | Paste into Claude Project custom instructions |\n'+
-    allSk.map(sk=>'| `skills/'+sk.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')+'/SKILL.md` | Upload to Project knowledge |').join('\n')+
-    '\n\n## Skills Included\n\n'+
-    allSk.map((sk,i)=>(i+1)+'. **'+sk.name+'**').join('\n')+
-    '\n\n---\n*Generated by ClaudeForge*'
-  );
+  /* ── README ── */
+  const skillTable = allSk.length > 0
+    ? '| File | Purpose |\n|------|----------|\n| `INSTRUCTIONS.md` | Paste into Project Instructions |\n'
+      + allSk.map(sk=>{
+          const sl=sk.name.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+          return '| `skills/'+sl+'/SKILL.md` | Upload to Project Knowledge |';
+        }).join('\n')
+    : '| `INSTRUCTIONS.md` | Paste into Project Instructions |';
 
-  /* Generate and download */
+  const skillList = allSk.length > 0
+    ? allSk.map((sk,i)=>`${i+1}. **${sk.name}** — ${sk.content.match(/description:\s*(.+)/)?.[1]||'See SKILL.md'}`).join('\n')
+    : '_No skills detected — describe your project in more detail for skill suggestions._';
+
+  folder.file('README.md', [
+    '# ' + projName,
+    '',
+    '> Generated by [ClaudeForge](https://nialless.github.io/ClaudeForge/) on ' + now,
+    '',
+    '## Quick Start (5 minutes)',
+    '',
+    '### Step 1 — Create your Claude Project',
+    '1. Go to **[claude.ai](https://claude.ai)** and sign in',
+    '2. Click **Projects** in the left sidebar',
+    '3. Click **New Project** and name it: **' + projName + '**',
+    '',
+    '### Step 2 — Add Project Instructions',
+    '1. Inside your new project, click **Project Instructions** (or the settings icon)',
+    '2. Open `INSTRUCTIONS.md` from this folder',
+    '3. Copy all the text between the `---` lines',
+    '4. Paste it into the Project Instructions field',
+    '5. Click **Save**',
+    '',
+    '### Step 3 — Upload Skills to Project Knowledge',
+    '1. In your Claude Project, click **Add Content** or **Project Knowledge**',
+    '2. For each skill folder inside `/skills/`:',
+    '   - Open the folder',
+    '   - Upload the `SKILL.md` file',
+    '3. Claude will now use these skills automatically when relevant',
+    '',
+    '### Step 4 — Start Chatting',
+    'Your project is ready. Try the starter prompts in `INSTRUCTIONS.md` to get going immediately.',
+    '',
+    '## Files in This Pack',
+    '',
+    skillTable,
+    '',
+    '## Skills Included',
+    '',
+    skillList,
+    '',
+    '## Tips',
+    '',
+    '- Mention a skill by name in your message to activate it directly (e.g. "Use the Research skill to...")',
+    '- Keep your Project Instructions under 2000 characters for best results',
+    '- Add new skills any time by uploading more SKILL.md files to Project Knowledge',
+    '- Re-run ClaudeForge with a more specific prompt to get more detailed skills',
+    '',
+    '---',
+    '_Built with [ClaudeForge](https://nialless.github.io/ClaudeForge/)_',
+  ].join('\n'));
+
+  /* ── Generate ZIP ── */
   try{
-    const blob=await zip.generateAsync({type:'blob'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url;a.download=folderName+'.zip';a.click();
-    URL.revokeObjectURL(url);
-    toast('Downloaded '+folderName+'.zip!','ok');
+    const blob = await zip.generateAsync({type:'blob',compression:'DEFLATE'});
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = slug+'.zip'; a.click();
+    setTimeout(()=>URL.revokeObjectURL(url), 10000);
+    toast('Downloaded '+slug+'.zip  ('+allSk.length+' skill'+(allSk.length!==1?'s':'')+')', 'ok');
   }catch(e){
     toast('Download failed: '+e.message,'err');
+    console.error('downloadPack error:',e);
   }
 }
+
 
 function buildDefaultInstructions(projName){
   return 'You are '+projName+', an AI assistant.\n\n'+
@@ -896,88 +1968,88 @@ async function anthropicCall(url,key,model,messages,maxTok,sys,_n,MAX){
 /* =========================================================
    SYSTEM PROMPTS
 ========================================================= */
-const ARCHSYS = (()=>{
-const S = String.raw;
-return S`You are ClaudeForge, an expert Claude platform architect. When given a project idea, produce a COMPREHENSIVE, DETAILED build guide using EXACTLY this structure. Never summarise — write every section in full with real specific content.
+const ARCHSYS = `You are ClaudeForge, an expert Claude platform architect. Produce a COMPLETE, READY-TO-USE project pack. Never use placeholder text. Every field must contain real, specific content for the exact project described.
+
+Use this EXACT format — the app parses your output to build a downloadable ZIP:
 
 ---
-# PROJECT: [Derive the project name from the user request]
+# PROJECT: [Exact project name derived from user request]
 
-## What We Are Building
-Write 3-4 sentences: what this project does, the problem it solves, who uses it, and the core value it delivers.
+## Overview
+[3-4 sentences: what this builds, who uses it, what problem it solves, and the core value delivered.]
 
 ## Claude Platform Stack
-List every Claude.ai feature this project uses and WHY:
-- **Projects** — [exactly what persistent context and custom instructions go here]
-- **Artifacts** — [what gets built as live artifacts, which MCP connectors: Drive/Gmail/Slack/GitHub]
-- **Claude Code CLI** — [specific /loop commands, sub-agent roles, plan file structure]
-- **Extended Thinking** — [which tasks require deep reasoning, what budget]
-- **Web Search** — [what real-time data is needed and when]
-- **Memory** — [what cross-session information is remembered and how]
-- **Computer Use** — [what browser/desktop automation runs, if applicable]
+[List every Claude.ai feature this project uses and the specific reason why:]
+- **Projects** — [what custom instructions and context live here]
+- **Artifacts** — [what gets built as live artifacts, which MCP connectors: Drive/Gmail/Slack/GitHub/etc]
+- **Claude Code** — [specific CLI commands, /loop usage, sub-agent structure]
+- **Extended Thinking** — [which tasks need deep reasoning and why]
+- **Web Search** — [what real-time data is needed]
+- **Memory** — [what is remembered cross-session]
 
 ## Claude Project Instructions
-The EXACT text to copy-paste into the Claude Project custom instructions field. Write this as if you are writing it FOR the project — ready to use, not a template:
 
 INSTRUCTIONS_START
-You are [Project Name], an AI [specific role and domain].
+You are [Project Name], an AI [specific role].
 
-Your core responsibilities:
-1. [Concrete task with exact expected behaviour — not vague]
-2. [Concrete task with exact expected behaviour]
-3. [Concrete task with exact expected behaviour]
-4. [Concrete task with exact expected behaviour]
+Your core job:
+[Write 4-6 concrete responsibilities. Each must describe exact behaviour, not vague goals.]
 
-Communication style: [Specific tone — professional/friendly/technical/etc]. Always [positive behaviour]. Never [anti-pattern to avoid].
+1. [Specific responsibility with exact behaviour]
+2. [Specific responsibility with exact behaviour]
+3. [Specific responsibility with exact behaviour]
+4. [Specific responsibility with exact behaviour]
 
-When the user provides [specific input type], you will [exact response behaviour including format].
-When asked about [topic area], always [specific handling instruction].
+Tone and style: [Specific description — professional/friendly/concise/detailed/etc]. Always [positive behaviour]. Never [anti-pattern].
 
-Tools to use proactively:
-- Web search: use whenever [specific condition] to get [specific data]
-- Artifacts: always create [what type] when [what trigger]
-- Skills: load and apply [list skill names] for [their specific use cases]
+When the user sends [specific input type], you will [exact response behaviour and format].
+When asked about [topic], always [specific handling].
 
-Response format: [Exact formatting rules — headers, length, structure]
+Use these tools proactively:
+- Web search: whenever [specific condition]
+- Artifacts: create [artifact type] when [trigger condition]
+- Skills: apply [Skill Name 1] for [use case], [Skill Name 2] for [use case]
+
+Response format: [Exact rules — use headers/bullets/prose, max length, structure]
 INSTRUCTIONS_END
 
 ## Required Skills
 
-Produce a COMPLETE, READY-TO-SAVE SKILL.md file for each skill. Minimum 3 skills. Each must be fully written out:
+[Write 3-5 skills. Each must be fully written and ready to save as SKILL.md. Use exact delimiters.]
 
 **Skill: [First Skill Name]**
 SKILL_START
 ---
-name: [skill-name-slug]
-description: [One sentence: what this skill does and when Claude activates it]
-triggers: [phrase1, phrase2, phrase3, phrase4]
+name: [first-skill-slug]
+description: [One sentence: what this skill does and when Claude uses it]
+triggers: [trigger phrase 1], [trigger phrase 2], [trigger phrase 3]
 version: 1.0
 ---
 
 # [First Skill Name]
 
 ## Purpose
-[3 sentences explaining what this skill enables, why it exists, and what outcome it produces for this specific project.]
+[3 sentences: what this skill enables, why it exists for this project, what outcome it produces.]
 
-## Activation Conditions
-Use this skill when:
-- [Specific trigger scenario 1]
-- [Specific trigger scenario 2]
-- [Specific trigger scenario 3]
+## When To Use
+- [Specific scenario 1]
+- [Specific scenario 2]
+- [Specific scenario 3]
 
 ## Process
-1. **[Action step]**: [Detailed instruction of what Claude does, checks, or produces]
-2. **[Action step]**: [Detailed instruction]
-3. **[Action step]**: [Detailed instruction]
-4. **[Action step]**: [Detailed instruction]
-5. **[Action step]**: [Detailed instruction]
+1. **[Step]**: [Detailed instruction of exactly what Claude does]
+2. **[Step]**: [Detailed instruction]
+3. **[Step]**: [Detailed instruction]
+4. **[Step]**: [Detailed instruction]
+5. **[Step]**: [Detailed instruction]
 
 ## Output Format
-[Exact structure of output when this skill runs — headings, sections, length, tone, any templates]
+[Exact structure of the response: what sections, what length, what tone, any templates to follow]
 
 ## Example
-User: "[Realistic example prompt that activates this skill]"
-Response approach: [First paragraph of what an ideal response looks like — 4-6 sentences of real content]
+User: "[A realistic prompt that triggers this skill]"
+
+Claude's response approach: [Write the first 2-3 sentences of what an ideal response looks like — real content, not a description of content]
 
 ## Quality Checks
 - [ ] [Specific quality criterion 1]
@@ -985,38 +2057,112 @@ Response approach: [First paragraph of what an ideal response looks like — 4-6
 - [ ] [Specific quality criterion 3]
 SKILL_END
 
-[Repeat the full SKILL_START...SKILL_END block for every additional skill — write each one in full]
+**Skill: [Second Skill Name]**
+SKILL_START
+---
+name: [second-skill-slug]
+description: [One sentence description]
+triggers: [trigger phrase 1], [trigger phrase 2], [trigger phrase 3]
+version: 1.0
+---
+
+# [Second Skill Name]
+
+## Purpose
+[3 sentences specific to this skill and project]
+
+## When To Use
+- [Specific scenario 1]
+- [Specific scenario 2]
+- [Specific scenario 3]
+
+## Process
+1. **[Step]**: [Detailed instruction]
+2. **[Step]**: [Detailed instruction]
+3. **[Step]**: [Detailed instruction]
+4. **[Step]**: [Detailed instruction]
+
+## Output Format
+[Exact format description]
+
+## Example
+User: "[Realistic trigger prompt]"
+
+Claude's response approach: [2-3 sentences of real example response content]
+
+## Quality Checks
+- [ ] [Quality criterion 1]
+- [ ] [Quality criterion 2]
+SKILL_END
+
+**Skill: [Third Skill Name]**
+SKILL_START
+---
+name: [third-skill-slug]
+description: [One sentence description]
+triggers: [trigger phrase 1], [trigger phrase 2], [trigger phrase 3]
+version: 1.0
+---
+
+# [Third Skill Name]
+
+## Purpose
+[3 sentences]
+
+## When To Use
+- [Scenario 1]
+- [Scenario 2]
+- [Scenario 3]
+
+## Process
+1. **[Step]**: [Detailed instruction]
+2. **[Step]**: [Detailed instruction]
+3. **[Step]**: [Detailed instruction]
+4. **[Step]**: [Detailed instruction]
+
+## Output Format
+[Format description]
+
+## Example
+User: "[Trigger prompt]"
+
+Claude's response approach: [2-3 sentences of real example content]
+
+## Quality Checks
+- [ ] [Criterion 1]
+- [ ] [Criterion 2]
+SKILL_END
 
 ## Build Phases
 
-### Phase 1 — Setup (Days 1-3)
+### Phase 1 — Setup (Days 1-2)
 - [ ] [Concrete action with exact steps]
 - [ ] [Concrete action]
 - [ ] [Concrete action]
 
 ### Phase 2 — Core Build (Week 2)
-- [ ] [Concrete build task]
-- [ ] [Concrete build task]
-- [ ] [Concrete build task]
+- [ ] [Build task with specifics]
+- [ ] [Build task]
+- [ ] [Build task]
 
-### Phase 3 — Test and Launch (Week 3)
-- [ ] [Concrete finalisation step]
-- [ ] [Concrete finalisation step]
+### Phase 3 — Launch (Week 3)
+- [ ] [Finalisation step]
+- [ ] [Finalisation step]
 
 ## Day-One Starter Prompts
-Copy these into your Claude project to start immediately:
-1. "[Ready-to-use prompt 1 — specific to this project]"
-2. "[Ready-to-use prompt 2]"
-3. "[Ready-to-use prompt 3]"
-4. "[Ready-to-use prompt 4]"
-5. "[Ready-to-use prompt 5]"
+Paste these into your new Claude Project to start immediately:
 
-## Model and Cost
-- **Best model**: [specific model] — [one sentence reason]
-- **Free option**: Groq llama-3.3-70b-versatile works well for [specific tasks in this project]
-- **Estimated cost**: [tokens/session estimate]
+1. "[Ready-to-use prompt specific to this project]"
+2. "[Ready-to-use prompt]"
+3. "[Ready-to-use prompt]"
+4. "[Ready-to-use prompt]"
+5. "[Ready-to-use prompt]"
+
+## Model Recommendation
+- **Best**: [model name] — [one sentence reason]
+- **Free alternative**: Groq llama-3.3-70b-versatile works well for [specific tasks in this project]
 ---`;
-})()
+
 
 const IMPSYS=`You are an expert frontend developer improving ClaudeForge.
 Given the current full HTML source and an improvement request, output the complete improved HTML file.
@@ -1250,6 +2396,9 @@ window.addEventListener('DOMContentLoaded',()=>{
   KEYS.forEach(k=>$(k)?.addEventListener('input',save));
   /* init slider */
   const sl=$('thr');if(sl)updSlider(sl);
+  /* load user skills */
+  loadSkills();
+
   /* show wizard if no key saved */
   if(!localStorage.getItem('cf33_p-key')){
     setTimeout(()=>openWizard(),300);
